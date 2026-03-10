@@ -1,6 +1,6 @@
 # PathForge AI – Backend 🚀
 
-PathForge AI is an intelligent learning roadmap generator that helps users create structured study plans for achieving their career goals. It uses AI to generate personalized weekly roadmaps, track progress, maintain learning streaks, and guide users through their journey.
+PathForge AI is an intelligent learning roadmap generator that helps users create structured study plans for achieving their career goals. It uses AI to generate personalized weekly roadmaps, track progress, maintain learning streaks.
 
 This backend powers the entire platform including authentication, AI roadmap generation, task tracking, progress analytics, and SaaS-based roadmap limits.
 
@@ -14,7 +14,6 @@ This backend powers the entire platform including authentication, AI roadmap gen
 * OTP Email Verification
 * Secure Login
 * Google OAuth Login
-* Forgot / Reset Password
 
 ### 🤖 AI Roadmap Generation
 
@@ -82,7 +81,7 @@ Roadmap generation is protected using **express-rate-limit** to prevent abuse.
 **Authentication**
 
 * JWT
-* Bcrypt
+* BcryptJS
 * Google OAuth
 
 **AI Integration**
@@ -92,7 +91,7 @@ Roadmap generation is protected using **express-rate-limit** to prevent abuse.
 **Utilities**
 
 * Express Rate Limit
-* Nodemailer (for OTP emails)
+* Brevo (for OTP emails)
 
 ---
 
@@ -137,8 +136,7 @@ POST /auth/register
 POST /auth/verify-otp
 POST /auth/login
 POST /auth/google-login
-POST /auth/forgot-password
-POST /auth/reset-password
+POST /auth/resend-otp
 ```
 
 ### Roadmaps
@@ -200,7 +198,7 @@ git clone https://github.com/yourusername/pathforge-ai-backend.git
 Move into the project directory
 
 ```
-cd pathforge-ai-backend
+cd server
 ```
 
 Install dependencies
@@ -212,7 +210,7 @@ npm install
 Run the server
 
 ```
-npm run dev
+nodemon index.js
 ```
 
 Server will start on:
