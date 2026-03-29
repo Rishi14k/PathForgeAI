@@ -1,8 +1,9 @@
-import { Compass } from 'lucide-react'
+import { Compass, LayoutDashboard, LogOut } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Navbar = () => {
+  const token = localStorage.getItem("token")
   return (
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-[#0E0F14]/70 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
@@ -23,17 +24,39 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to="/login">
-            <button className="text-[#7d8caf] hover:text-[#fafafa]">
-              Login
-            </button>
-          </Link>
-          <Link to="/signup">
-            <button className="bg-primary p-2 rounded text-[#fafafa] hover:bg-[#4F7CFF]/90">
-              Get Started
-            </button>
-          </Link>
-        </div>
+  {!token ? (
+    <>
+      <Link to="/login">
+        <button className="text-[#7d8caf] hover:text-[#fafafa] cursor-pointer">
+          Login
+        </button>
+      </Link>
+      <Link to="/signup">
+        <button className="bg-primary p-2 rounded text-[#fafafa] hover:bg-[#4F7CFF]/90 cursor-pointer">
+          Get Started
+        </button>
+      </Link>
+    </>
+  ) : (
+    /* This shows when the user IS logged in */
+    <>
+    
+    <Link to="/dashboard">
+      <button className="text-[#7d8caf] hover:text-[#fafafa] cursor-pointer">
+        <LayoutDashboard />
+      </button>
+    </Link>
+
+    
+    <Link to="/dashboard">
+      <button className="text-[#7d8caf] hover:text-[#fafafa] cursor-pointer">
+        <LogOut />
+      </button>
+    </Link>
+    </>
+
+  )}
+</div>
       </nav>
     </header>
   )

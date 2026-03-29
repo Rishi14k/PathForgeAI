@@ -19,3 +19,7 @@ export const loginUser  = async(data)=>{
 export const getMe = async()=>{
     return apiClient.get('/auth/me')
 }
+
+export const googleLogin = async(idToken)=>{
+    return apiClient.post('/auth/google-login',{idToken})
+}

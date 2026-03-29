@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const generateOtp = require('../services/generateOtp')
 const sendOtp = require('../services/sendOtp')
 const jwt = require('jsonwebtoken')
+const googleClient = require('../config/gooleClient')
 
 
 const createToken = (user) => {
@@ -134,10 +135,14 @@ const login = async (req,res)=>{
         }
         const isPasswordMatch = await bcrypt.compare(password,user.password)
         if(!isPasswordMatch){
-            return res.status(400).json({success:false,messsage:"Invalid password"})
+            return res.status(400).json({success:false,message:"Invalid password"})
         }
+
+        const userObject = user.toObject()
+        delete userObject.password
+
         const token = createToken(user)
-        res.status(200).json({success:true,data:user,token})
+        res.status(200).json({success:true,data:userObject,token})
     } catch (error) {
         console.log(error)
         res.status(500).json({success:false,message:"Internal server Error in login"})
@@ -152,11 +157,12 @@ const googleLogin = async(req,res)=>{
             idToken,
             audience: process.env.GOOGLE_CLIENT_ID
         })
-        const {email,sub} = ticket.getPayload();
+        const {email,sub,name} = ticket.getPayload();
         let user = await User.findOne({googleId:sub});
         if(!user){
             user = await User.create({
                 email, 
+                name,
                 googleId:sub,
                 isEmailVerified:true,
                 authProvider:'google'

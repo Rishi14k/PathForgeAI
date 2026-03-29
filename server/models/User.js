@@ -11,11 +11,14 @@ const userSchema = new mongoose.Schema(
       unique: true,
       sparse: true,
     },
-    password: {
-      type: String,
-      required: true,
-      select: false,
+   password: {
+    type: String,
+    select:false,
+    // This function makes password required ONLY if NOT using Google
+    required: function() {
+      return this.authProvider !== 'google';
     },
+  },
     googleId: {
       type: String,
       sparse: true,
