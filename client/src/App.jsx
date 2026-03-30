@@ -1,26 +1,27 @@
-
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Pricing from "./pages/Pricing";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Home from "./pages/Landing/Home";
+import Pricing from "./pages/Landing/Pricing";
+import Login from "./pages/Landing/Login";
+import Register from "./pages/Landing/Register";
 import Dashboard from "./pages/Dashboard";
-import {useDispatch} from "react-redux"
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getMeThunk } from "./redux/features/auth/authSlice";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
+import DashboardLayout from "./components/DashboardLayout";
+import DashboardContent from "./UserDashboard/dashboard/components/DashboardContent";
 
 const App = () => {
   const dispath = useDispatch();
-  const token = localStorage.getItem("token")
-  useEffect(()=>{
-    if(token){
-      dispath(getMeThunk())
-    }else{
-      console.log("No token found")
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (token) {
+      dispath(getMeThunk());
+    } else {
+      console.log("No token found");
     }
-  },[])
+  }, []);
   return (
     <main className="min-h-screen bg-[#0E0F14]">
       {/* <Navbar /> */}
@@ -30,7 +31,12 @@ const App = () => {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<DashboardContent />} />
+          </Route>
+        </Route>
       </Routes>
 
       {/* <Footer /> */}

@@ -23,3 +23,7 @@ export const getMe = async()=>{
 export const googleLogin = async(idToken)=>{
     return apiClient.post('/auth/google-login',{idToken})
 }
+
+export const logout = async()=>{
+    return apiClient.get('/auth/logout')
+}

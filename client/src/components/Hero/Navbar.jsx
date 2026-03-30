@@ -1,9 +1,23 @@
 import { Compass, LayoutDashboard, LogOut } from 'lucide-react'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { logoutThunk } from '../../redux/features/auth/authSlice'
+import { toast } from 'react-toastify'
 
 const Navbar = () => {
   const token = localStorage.getItem("token")
+  const dispatch = useDispatch()
+  const handleLogout = ()=>{
+    try {
+      dispatch(logoutThunk())
+      toast.success("Logged out successfully!")
+    } catch (error) {
+      toast.error("Something went wrong!")
+      console.log(error)
+    }
+  }
+
   return (
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-[#0E0F14]/70 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
@@ -49,7 +63,7 @@ const Navbar = () => {
 
     
     <Link to="/dashboard">
-      <button className="text-[#7d8caf] hover:text-[#fafafa] cursor-pointer">
+      <button onClick={handleLogout} className="text-[#7d8caf] hover:text-[#fafafa] cursor-pointer">
         <LogOut />
       </button>
     </Link>

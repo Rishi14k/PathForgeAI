@@ -6,6 +6,7 @@ import {
   resendOtp,
   verifyOtp,
   googleLogin,
+  logout,
 } from "../../../apis/authApi";
 import { data } from "react-router-dom";
 
@@ -98,6 +99,15 @@ export const googleLoginThunk = createAsyncThunk(
   },
 );
 
+export const logoutThunk = createAsyncThunk("auth/logout",async(_,thunkApi)=>{
+  try {
+    const res = await logout()
+    return res.data
+  } catch (error) {
+    return thunkApi.rejectWithValue(error.response.data.message)
+  }
+})
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -174,7 +184,14 @@ const authSlice = createSlice({
       .addCase(googleLoginThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(logoutThunk.fulfilled,(state,action)=>{
+        state.user = null
+        state.token = null
+        state.isAuthenticated = false
+        localStorage.removeItem("token")
+      })
+
   },
 });
 

@@ -7,7 +7,7 @@ import {
   registerThunk,
   resendOtpThunk,
   verifyOtpThunk,
-} from "../redux/features/auth/authSlice";
+} from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -79,7 +79,7 @@ const Register = () => {
     if(isAuthenticated){
       navigate("/dashboard")
     }
-  },[])
+  },[isAuthenticated])  
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#0a0b0f] p-4">

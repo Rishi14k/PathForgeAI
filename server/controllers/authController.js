@@ -188,11 +188,27 @@ const getUser = async(req,res)=>{
 }
 
 
+const logout = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Logout failed",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
     register,
     verifyOtp,
     resendOtp,
     login,
     googleLogin,
-    getUser
+    getUser,
+    logout
 }

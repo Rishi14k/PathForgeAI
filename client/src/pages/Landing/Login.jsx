@@ -2,7 +2,7 @@ import { ArrowRight, Compass } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { googleLoginThunk, loginThunk } from "../redux/features/auth/authSlice";
+import { googleLoginThunk, loginThunk } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -13,13 +13,12 @@ const Login = () => {
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       navigate("/dashboard");
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e) => {
     try {
