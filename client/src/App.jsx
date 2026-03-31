@@ -11,6 +11,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import DashboardLayout from "./components/DashboardLayout";
 import DashboardContent from "./UserDashboard/dashboard/components/DashboardContent";
+import MyroadmapContent from "./UserDashboard/myRoadmaps/components/MyroadmapContent";
+import CreateRoadmapContent from "./UserDashboard/createRoadmap/CreateRoadmapContent";
+import ProgressContent from "./UserDashboard/progress/ProgressContent";
+import SettingsContent from "./UserDashboard/settings/SettingsContent";
 
 const App = () => {
   const dispath = useDispatch();
@@ -35,6 +39,10 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardContent />} />
+            <Route path="my-roadmaps" element={<MyroadmapContent />} />
+            <Route path="create-roadmap" element={<CreateRoadmapContent/>}/>
+            <Route path="progress" element={<ProgressContent/>}/>
+            <Route path="settings" element={<SettingsContent/>}/>
           </Route>
         </Route>
       </Routes>

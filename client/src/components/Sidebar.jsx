@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Map, Settings, Sparkles, TrendingUp, X } from 'lucide-react'
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Icon from './Icon';
 
 const navItems = [
@@ -14,32 +14,33 @@ const navItems = [
             key:"nav-roadmaps",
             label:"My Roadmaps",
             icon:Map,
-            href:"/my-roadmaps"
+            href:"/dashboard/my-roadmaps"
         },
         {
             key:"nav-create",
             label:"Create Roadmap",
             icon:Sparkles,
-            href:"/create-roadmap"
+            href:"/dashboard/create-roadmap"
         },
         {
             key:"nav-progress",
             label:"Progress",
             icon:TrendingUp,
-            href:"/progress"
+            href:"/dashboard/progress"
         },
         {
             key:"nav-settings",
             label:"Settings",
             icon:Settings,
-            href:"/settings"
+            href:"/dashboard/settings"
         }
     ]
 
 
 const Sidebar = ({collapsed, onToggle, mobileOpen, onMobileClose}) => {
 
- const pathname = window.location.pathname;
+ const location = useLocation();
+const pathname = location.pathname;
 
  const sidebarWidth = collapsed ? "80px" : "260px"
     
@@ -93,7 +94,7 @@ const Sidebar = ({collapsed, onToggle, mobileOpen, onMobileClose}) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
-              <Link href={item.href} key={item.key}>
+              <Link to={item.href} key={item.key}>
                 <div
                   className={`nav-item ${isActive ? 'active' : ''} ${collapsed ? 'justify-center px-0' : ''}`}
                   style={{ padding: collapsed ? '10px 0' : '10px 12px' }}
@@ -198,7 +199,7 @@ const Sidebar = ({collapsed, onToggle, mobileOpen, onMobileClose}) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
-              <Link href={item.href} key={`mobile-${item.key}`} onClick={onMobileClose}>
+              <Link to={item.href} key={`mobile-${item.key}`} onClick={onMobileClose}>
                 <div className={`nav-item ${isActive ? 'active' : ''}`}>
                   <Icon size={20} style={{ color: isActive ? '#9F67FF' : '#9CA3AF', flexShrink: 0 }} />
                   <span className="text-sm font-medium">{item.label}</span>
