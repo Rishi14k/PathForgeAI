@@ -154,7 +154,7 @@ const StepOne = ({formData, updateFormData,onNext}) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className="block text-sm font-semibold mb-1" style={{ color: '#F9FAFB' }}>
-              Hours available per week
+              Hours available per Day
             </label>
             <p className="text-xs mb-2" style={{ color: '#9CA3AF' }}>
               Realistic estimate helps with task distribution.
@@ -165,7 +165,7 @@ const StepOne = ({formData, updateFormData,onNext}) => {
               onChange={(e) => updateFormData({ weeklyHours: e.target.value })}
             >
               {['2', '4', '6', '8', '10', '15', '20'].map((h) => (
-                <option key={`hours-${h}`} value={h}>{h} hours / week</option>
+                <option key={`hours-${h}`} value={h}>{h} hours / day</option>
               ))}
             </select>
           </div>

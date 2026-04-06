@@ -2,8 +2,13 @@ import { Flame, Zap } from 'lucide-react';
 import {motion} from "framer-motion"
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const WelcomeHero = () => {
+
+  const streak = useSelector((state) => state.dashboard.data?.data?.streak) || 0;
+const taskComp = useSelector((state) => state.dashboard.data?.data?.completedTasks) || 0;
+
  return (
     <motion.div
       initial={{ opacity: 0, y: -16 }}
@@ -46,7 +51,7 @@ const WelcomeHero = () => {
               }}
             >
               <Flame size={13} />
-              <span>7-day streak active</span>
+              <span>{streak || 0}-day streak active</span>
             </div>
             <div
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
@@ -75,12 +80,12 @@ const WelcomeHero = () => {
             </span>
           </h2>
           <p className="mt-2 text-base" style={{ color: '#9CA3AF' }}>
-            Continue building your learning orbit. You have <strong style={{ color: '#C084FC' }}>3 tasks</strong> remaining today.
+            Continue building your learning orbit. You have completed <strong style={{ color: '#C084FC' }}>{taskComp || 0} tasks.</strong>
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/create-roadmap">
+          <Link to="/dashboard/create-roadmap">
             <motion.button
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.97 }}
@@ -90,7 +95,7 @@ const WelcomeHero = () => {
               Generate Roadmap
             </motion.button>
           </Link>
-          <Link href="/my-roadmaps">
+          <Link to="/dashboard/my-roadmaps">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}

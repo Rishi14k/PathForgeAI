@@ -46,7 +46,7 @@ const Login = () => {
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <Link href="/" className="mb-8 flex items-center justify-center gap-2">
+        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#6366f1]">
             <Compass className="h-6 w-6 text-white" />
           </div>

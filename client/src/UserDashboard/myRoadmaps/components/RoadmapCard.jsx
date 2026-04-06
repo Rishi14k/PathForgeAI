@@ -1,53 +1,58 @@
-import React, { useState } from "react";
-import {
-  Flame,
-  Clock,
-  BookOpen,
-  MoreHorizontal,
-  Play,
-  Pause,
-  Trash2,
-  ExternalLink,
-  Sparkles,
-  CheckCircle2,
-} from "lucide-react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  MoreHorizontal,
+  ExternalLink,
+  Trash2,
+  Pause,
+  Play,
+  BookOpen,
+  Clock,
+  Flame,
+  Sparkles,
+} from "lucide-react";
+import { useSelector } from "react-redux";
 
 const statusConfig = {
-  active: { label: "Active", className: "badge-active", dot: "#10B981" },
-  paused: { label: "Paused", className: "badge-paused", dot: "#F59E0B" },
+  active: {
+    className: "badge-active",
+    dotColor: "bg-[#10B981]",
+  },
+  archived: {
+    className: "badge-paused",
+    dotColor: "bg-[#F59E0B]",
+  },
   completed: {
-    label: "Completed",
     className: "badge-completed",
-    dot: "#9F67FF",
+    dotColor: "bg-[#9F67FF]",
   },
 };
-
 const skillLevelColor = {
-  Beginner: "#10B981",
-  Intermediate: "#F59E0B",
-  Advanced: "#EF4444",
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.97 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.4, ease: "easeOut" },
-  },
+  beginner: "#10B981",
+  intermediate: "#F59E0B",
+  advanced: "#EF4444",
 };
 
 const RoadmapCard = ({ roadmap }) => {
-    const [menuOpen, setMenuOpen] = useState(false);
-  const status = statusConfig[roadmap.status];
-  const skillColor = skillLevelColor[roadmap.skillLevel] || '#9CA3AF';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const currentStatus = statusConfig[roadmap.status] || statusConfig.active;
+  const streak =
+    useSelector((state) => state.dashboard.data?.data?.streak) || 0;
+
+  const statusColor =
+    roadmap.status === "completed"
+      ? "linear-gradient(90deg, #7C3AED, #9F67FF)"
+      : roadmap.status === "active"
+        ? "linear-gradient(90deg, #10B981, #06B6D4)"
+        : "linear-gradient(90deg, #F59E0B, #EF4444)";
+
+  const skillColor = skillLevelColor[roadmap?.skillLevel] || "#9CA3AF";
+
   return (
-    <Link href={`/roadmap/${roadmap.id}`} className="block">
+    <Link to={`/dashboard/roadmap/${roadmap._id}`} className="block">
       <motion.div
-        variants={cardVariants}
         whileHover={{ y: -3, scale: 1.01 }}
         className="roadmap-card-hover rounded-2xl flex flex-col cursor-pointer relative"
         style={{
@@ -56,95 +61,71 @@ const RoadmapCard = ({ roadmap }) => {
           overflow: "hidden",
         }}
       >
-        {/* Top accent line */}
-        <div
-          className="h-0.5 w-full"
-          style={{
-            background:
-              roadmap.status === "completed"
-                ? "linear-gradient(90deg, #7C3AED, #9F67FF)"
-                : roadmap.status === "active"
-                  ? "linear-gradient(90deg, #10B981, #06B6D4)"
-                  : "linear-gradient(90deg, #F59E0B, #EF4444)",
-          }}
-        />
+        {/* Top Accent Line */}
+        <div className="h-0.5 w-full" style={{ background: statusColor }} />
 
         <div className="p-5 flex flex-col flex-1">
-          {/* Header row */}
-          <div className="flex items-start justify-between gap-2 mb-3">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className={`badge ${status.className}`}>
+              <span className={`badge ${currentStatus.className}`}>
                 <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: status.dot }}
+                  className={`w-1.5 h-1.5 rounded-full ${currentStatus.dotColor}`}
                 />
-                {status.label}
+                {roadmap.status}
               </span>
-              {roadmap.aiGenerated && (
+              {roadmap?.aiProvider === "gemini" && (
                 <span className="badge badge-ai">
                   <Sparkles size={9} />
                   AI
                 </span>
               )}
             </div>
-
-            {/* More menu */}
-            <div className="relative flex-shrink-0">
+            {/* Menu */}
+            <div className="relative">
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.preventDefault();
                   setMenuOpen(!menuOpen);
                 }}
-                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-lg flex items-center justify-center"
                 style={{
-                  background: menuOpen
-                    ? "rgba(124, 58, 237, 0.15)"
-                    : "rgba(45, 55, 72, 0.3)",
-                  color: menuOpen ? "#9F67FF" : "#9CA3AF",
+                  background: "rgba(45,55,72,0.3)",
+                  color: "#9CA3AF",
                 }}
               >
                 <MoreHorizontal size={14} />
               </button>
+
               {menuOpen && (
                 <div
-                  className="absolute right-0 top-full mt-1 w-44 rounded-xl overflow-hidden z-20"
+                  className="absolute right-0 mt-1 w-44 rounded-xl z-20"
                   style={{
-                    background: "rgba(17, 24, 39, 0.98)",
-                    border: "1px solid rgba(45, 55, 72, 0.6)",
-                    boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
+                    background: "rgba(17,24,39,0.98)",
+                    border: "1px solid rgba(45,55,72,0.6)",
                   }}
                 >
                   {[
-                    {
-                      icon: ExternalLink,
-                      label: "Open Roadmap",
-                      color: "#F9FAFB",
-                    },
+                    { icon: ExternalLink, label: "Open" },
                     {
                       icon: roadmap.status === "active" ? Pause : Play,
-                      label:
-                        roadmap.status === "active"
-                          ? "Pause Learning"
-                          : "Resume Learning",
-                      color: "#F9FAFB",
+                      label: roadmap.status === "active" ? "Pause" : "Resume",
                     },
-                    { icon: Trash2, label: "Delete Roadmap", color: "#EF4444" },
+                    {
+                      icon: Trash2,
+                      label: "Delete",
+                      color: "#EF4444",
+                    },
                   ].map((item) => (
                     <button
-                      key={`menu-${roadmap.id}-${item.label}`}
+                      key={item.label}
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.preventDefault();
                         setMenuOpen(false);
+                        navigate(`/dashboard/roadmap/${roadmap._id}`);
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-left transition-colors"
-                      style={{ color: item.color }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background =
-                          "rgba(45, 55, 72, 0.3)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent";
-                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm"
+                      style={{ color: item.color || "#F9FAFB" }}
                     >
                       <item.icon size={13} />
                       {item.label}
@@ -155,42 +136,36 @@ const RoadmapCard = ({ roadmap }) => {
             </div>
           </div>
 
-          {/* Title & description */}
+          {/* Title */}
           <h3
-            className="text-base font-semibold leading-snug mb-1.5"
+            className="text-base font-semibold mb-2"
             style={{ color: "#F9FAFB" }}
           >
-            {roadmap.title}
+            {roadmap.goal}
           </h3>
-          <p
-            className="text-xs leading-relaxed mb-4 flex-1"
-            style={{
-              color: "#9CA3AF",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {roadmap.description}
+
+          {/* Description */}
+          <p className="text-xs mb-4" style={{ color: "#9CA3AF" }}>
+            Personalized learning roadmap generated for your development
+            journey.
           </p>
 
-          {/* Tags */}
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {roadmap.tags.slice(0, 3).map((tag) => (
-              <span
-                key={`tag-${roadmap.id}-${tag}`}
-                className="text-xs px-2 py-0.5 rounded-md font-medium"
-                style={{
-                  background: "rgba(45, 55, 72, 0.5)",
-                  color: "#9CA3AF",
-                  border: "1px solid rgba(45, 55, 72, 0.5)",
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-            {roadmap.tags.length > 3 && (
+            {roadmap?.learningStyles &&
+              roadmap?.learningStyles.map((tag) => (
+                <span
+                  key={`tag-${roadmap._id}-${tag}`}
+                  className="text-xs px-2 py-0.5 rounded-md font-medium"
+                  style={{
+                    background: "rgba(45, 55, 72, 0.5)",
+                    color: "#9CA3AF",
+                    border: "1px solid rgba(45, 55, 72, 0.5)",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            {roadmap?.learningStyles && roadmap?.learningStyles.length > 3 && (
               <span
                 className="text-xs px-2 py-0.5 rounded-md font-medium"
                 style={{
@@ -198,35 +173,67 @@ const RoadmapCard = ({ roadmap }) => {
                   color: "#6B7280",
                 }}
               >
-                +{roadmap.tags.length - 3}
+                +{roadmap?.learningStyles.length - 3}
               </span>
             )}
           </div>
 
-          {/* Progress */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {roadmap?.resourcePreferences &&
+              roadmap?.resourcePreferences.map((tag) => (
+                <span
+                  key={`tag-${roadmap._id}-${tag}`}
+                  className="text-xs px-2 py-0.5 rounded-md font-medium"
+                  style={{
+                    background: "rgba(45, 55, 72, 0.5)",
+                    color: "#9CA3AF",
+                    border: "1px solid rgba(45, 55, 72, 0.5)",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            {roadmap?.resourcePreferences &&
+              roadmap?.resourcePreferences.length > 3 && (
+                <span
+                  className="text-xs px-2 py-0.5 rounded-md font-medium"
+                  style={{
+                    background: "rgba(45, 55, 72, 0.3)",
+                    color: "#6B7280",
+                  }}
+                >
+                  +{roadmap?.resourcePreferences.length - 3}
+                </span>
+              )}
+          </div>
+
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1.5">
               <span
                 className="text-xs font-medium"
                 style={{ color: "#9CA3AF" }}
               >
-                {roadmap.completedTasks}/{roadmap.totalTasks} tasks
+                {roadmap?.progress?.completedTasks}/
+                {roadmap?.progress?.totalTasks} tasks
               </span>
               <span
                 className="text-xs font-bold mono"
                 style={{
-                  color: roadmap.progress === 100 ? "#10B981" : "#9F67FF",
+                  color:
+                    roadmap?.progress?.progressPercent === 100
+                      ? "#10B981"
+                      : "#9F67FF",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
-                {roadmap.progress}%
+                {roadmap?.progress?.progressPercent}%
               </span>
             </div>
             <div className="progress-bar-bg h-1.5">
               <motion.div
                 className="progress-bar-fill h-1.5"
                 initial={{ width: 0 }}
-                animate={{ width: `${roadmap.progress}%` }}
+                animate={{ width: `${roadmap?.progress?.progressPercent}%` }}
                 transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
                 style={{
                   background:
@@ -238,39 +245,35 @@ const RoadmapCard = ({ roadmap }) => {
             </div>
           </div>
 
-          {/* Meta row */}
+          {/* Meta Info */}
           <div
             className="flex items-center justify-between pt-3"
-            style={{ borderTop: "1px solid rgba(45, 55, 72, 0.4)" }}
+            style={{
+              borderTop: "1px solid rgba(45,55,72,0.4)",
+            }}
           >
             <div className="flex items-center gap-3">
-              <div
-                className="flex items-center gap-1"
-                style={{ color: "#6B7280" }}
-              >
+              <div className="flex items-center gap-1 text-[#6B7280]">
                 <BookOpen size={11} />
-                <span className="text-xs">{roadmap.totalWeeks}w</span>
+                <span className="text-xs">{roadmap.durationWeeks}w</span>
               </div>
-              <div
-                className="flex items-center gap-1"
-                style={{ color: "#6B7280" }}
-              >
+
+              <div className="flex items-center gap-1 text-[#6B7280]">
                 <Clock size={11} />
-                <span className="text-xs">{roadmap.weeklyHours}h/wk</span>
+                <span className="text-xs">{roadmap.dailyStudyTime}h/day</span>
               </div>
-              {roadmap.streak > 0 && (
+
+              {streak > 0 && (
                 <div
                   className="flex items-center gap-1"
                   style={{ color: "#F59E0B" }}
                 >
                   <Flame size={11} />
-                  <span className="text-xs font-medium">{roadmap.streak}</span>
+                  <span className="text-xs font-medium">{streak}</span>
                 </div>
               )}
-              {roadmap.status === "completed" && (
-                <CheckCircle2 size={13} style={{ color: "#10B981" }} />
-              )}
             </div>
+
             <div className="flex items-center gap-1.5">
               <div
                 className="w-1.5 h-1.5 rounded-full"
@@ -282,9 +285,9 @@ const RoadmapCard = ({ roadmap }) => {
             </div>
           </div>
 
-          {/* Last activity */}
+          {/* Created Date */}
           <p className="text-xs mt-2" style={{ color: "#4B5563" }}>
-            Last activity: {roadmap.lastActivity}
+            Created: {new Date(roadmap.createdAt).toLocaleDateString()}
           </p>
         </div>
       </motion.div>

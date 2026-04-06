@@ -7,44 +7,69 @@ import {
   Settings,
   LogOut,
   X,
-} from 'lucide-react';
-import { useState } from 'react';
-
+} from "lucide-react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const notifications = [
-  { id: 'notif-001', title: 'Task completed!', body: 'You finished "React Hooks Deep Dive"', time: '2m ago', read: false },
-  { id: 'notif-002', title: 'Streak milestone', body: "You've maintained a 7-day streak 🔥", time: '1h ago', read: false },
-  { id: 'notif-003', title: 'New roadmap ready', body: 'Your TypeScript roadmap was generated', time: '3h ago', read: true },
-  { id: 'notif-004', title: 'Weekly recap', body: 'You completed 8/12 tasks this week', time: '1d ago', read: true },
+  {
+    id: "notif-001",
+    title: "Task completed!",
+    body: 'You finished "React Hooks Deep Dive"',
+    time: "2m ago",
+    read: false,
+  },
+  {
+    id: "notif-002",
+    title: "Streak milestone",
+    body: "You've maintained a 7-day streak 🔥",
+    time: "1h ago",
+    read: false,
+  },
+  {
+    id: "notif-003",
+    title: "New roadmap ready",
+    body: "Your TypeScript roadmap was generated",
+    time: "3h ago",
+    read: true,
+  },
+  {
+    id: "notif-004",
+    title: "Weekly recap",
+    body: "You completed 8/12 tasks this week",
+    time: "1d ago",
+    read: true,
+  },
 ];
 
-const Topbar = ({pageTitle, onMobileMenuToggle }) => {
+const Topbar = ({ pageTitle, onMobileMenuToggle }) => {
 
+  const {user} = useSelector((state)=>state.auth)
 
-    const [searchOpen,setSearchOpen] = useState(false)
-      const [searchValue, setSearchValue] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [notifOpen, setNotifOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifList, setNotifList] = useState(notifications);
 
-   const unreadCount = notifList.filter((n) => !n.read).length;
-   const markAllRead = ()=>{
-    setNotifList(notifList.map((n)=>({...n,read:true})))
-   }
+  const unreadCount = notifList.filter((n) => !n.read).length;
+  const markAllRead = () => {
+    setNotifList(notifList.map((n) => ({ ...n, read: true })));
+  };
 
   return (
     <header
       className="flex items-center h-16 px-4 lg:px-8 gap-4 flex-shrink-0 sticky top-0 z-20"
       style={{
-        background: 'rgba(11, 15, 25, 0.9)',
-        borderBottom: '1px solid rgba(45, 55, 72, 0.4)',
-        backdropFilter: 'blur(12px)',
+        background: "rgba(11, 15, 25, 0.9)",
+        borderBottom: "1px solid rgba(45, 55, 72, 0.4)",
+        backdropFilter: "blur(12px)",
       }}
     >
       {/* Mobile menu */}
       <button
         className="lg:hidden p-2 rounded-lg transition-colors"
-        style={{ color: '#9CA3AF' }}
+        style={{ color: "#9CA3AF" }}
         onClick={onMobileMenuToggle}
       >
         <Menu size={20} />
@@ -52,20 +77,23 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
 
       {/* Page Title */}
       <div className="flex-1 min-w-0">
-        <h1 className="text-lg font-semibold truncate" style={{ color: '#F9FAFB' }}>
+        <h1
+          className="text-lg font-semibold truncate"
+          style={{ color: "#F9FAFB" }}
+        >
           {pageTitle}
         </h1>
       </div>
 
       {/* Search */}
-      <div className="relative hidden md:flex items-center">
+      {/* <div className="relative hidden md:flex items-center">
         {searchOpen ? (
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search
                 size={14}
                 className="absolute left-3 top-1/2 -translate-y-1/2"
-                style={{ color: '#6B7280' }}
+                style={{ color: "#6B7280" }}
               />
               <input
                 autoFocus
@@ -74,17 +102,17 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search roadmaps, tasks..."
                 className="input-field pl-9 pr-4 py-2 text-sm"
-                style={{ width: '260px' }}
+                style={{ width: "260px" }}
               />
             </div>
 
             <button
               onClick={() => {
                 setSearchOpen(false);
-                setSearchValue('');
+                setSearchValue("");
               }}
               className="p-2 rounded-lg transition-colors"
-              style={{ color: '#9CA3AF' }}
+              style={{ color: "#9CA3AF" }}
             >
               <X size={16} />
             </button>
@@ -94,9 +122,9 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
             onClick={() => setSearchOpen(true)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200"
             style={{
-              background: 'rgba(45, 55, 72, 0.3)',
-              border: '1px solid rgba(45, 55, 72, 0.5)',
-              color: '#6B7280',
+              background: "rgba(45, 55, 72, 0.3)",
+              border: "1px solid rgba(45, 55, 72, 0.5)",
+              color: "#6B7280",
             }}
           >
             <Search size={14} />
@@ -105,16 +133,16 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
             <span
               className="text-xs mono px-1.5 py-0.5 rounded"
               style={{
-                background: 'rgba(45, 55, 72, 0.5)',
-                color: '#4B5563',
-                fontSize: '10px',
+                background: "rgba(45, 55, 72, 0.5)",
+                color: "#4B5563",
+                fontSize: "10px",
               }}
             >
               ⌘K
             </span>
           </button>
         )}
-      </div>
+      </div> */}
 
       {/* Notifications */}
       <div className="relative">
@@ -126,14 +154,12 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
           className="relative p-2 rounded-lg transition-all duration-200"
           style={{
             background: notifOpen
-              ? 'rgba(124, 58, 237, 0.15)'
-              : 'rgba(45, 55, 72, 0.3)',
+              ? "rgba(124, 58, 237, 0.15)"
+              : "rgba(45, 55, 72, 0.3)",
             border: `1px solid ${
-              notifOpen
-                ? 'rgba(124, 58, 237, 0.4)'
-                : 'rgba(45, 55, 72, 0.5)'
+              notifOpen ? "rgba(124, 58, 237, 0.4)" : "rgba(45, 55, 72, 0.5)"
             }`,
-            color: notifOpen ? '#9F67FF' : '#9CA3AF',
+            color: notifOpen ? "#9F67FF" : "#9CA3AF",
           }}
         >
           <Bell size={18} />
@@ -142,9 +168,9 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
             <span
               className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-xs font-bold rounded-full"
               style={{
-                background: '#7C3AED',
-                color: 'white',
-                fontSize: '10px',
+                background: "#7C3AED",
+                color: "white",
+                fontSize: "10px",
               }}
             >
               {unreadCount}
@@ -156,15 +182,15 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
           <div
             className="absolute right-0 top-full mt-2 w-80 rounded-2xl overflow-hidden z-50"
             style={{
-              background: 'rgba(17, 24, 39, 0.98)',
-              border: '1px solid rgba(45, 55, 72, 0.6)',
-              backdropFilter: 'blur(20px)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              background: "rgba(17, 24, 39, 0.98)",
+              border: "1px solid rgba(45, 55, 72, 0.6)",
+              backdropFilter: "blur(20px)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
             }}
           >
             <div
               className="flex items-center justify-between px-4 py-3"
-              style={{ borderBottom: '1px solid rgba(45, 55, 72, 0.4)' }}
+              style={{ borderBottom: "1px solid rgba(45, 55, 72, 0.4)" }}
             >
               <span className="font-semibold text-sm text-gray-100">
                 Notifications
@@ -184,16 +210,16 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
                   key={notif.id}
                   className="flex gap-3 px-4 py-3 cursor-pointer"
                   style={{
-                    borderBottom: '1px solid rgba(45, 55, 72, 0.3)',
+                    borderBottom: "1px solid rgba(45, 55, 72, 0.3)",
                     background: notif.read
-                      ? 'transparent'
-                      : 'rgba(124, 58, 237, 0.05)',
+                      ? "transparent"
+                      : "rgba(124, 58, 237, 0.05)",
                   }}
                 >
                   <div
                     className="w-2 h-2 rounded-full mt-1.5"
                     style={{
-                      background: notif.read ? 'transparent' : '#7C3AED',
+                      background: notif.read ? "transparent" : "#7C3AED",
                     }}
                   />
 
@@ -221,27 +247,25 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
           className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-xl"
           style={{
             background: userMenuOpen
-              ? 'rgba(124, 58, 237, 0.1)'
-              : 'rgba(45, 55, 72, 0.3)',
+              ? "rgba(124, 58, 237, 0.1)"
+              : "rgba(45, 55, 72, 0.3)",
             border: `1px solid ${
-              userMenuOpen
-                ? 'rgba(124, 58, 237, 0.3)'
-                : 'rgba(45, 55, 72, 0.5)'
+              userMenuOpen ? "rgba(124, 58, 237, 0.3)" : "rgba(45, 55, 72, 0.5)"
             }`,
           }}
         >
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold"
             style={{
-              background: 'linear-gradient(135deg, #7C3AED, #9F67FF)',
-              color: 'white',
+              background: "linear-gradient(135deg, #7C3AED, #9F67FF)",
+              color: "white",
             }}
           >
-            AK
+            {user?.name?.charAt(0) || "SO"}
           </div>
 
           <span className="text-sm hidden sm:block text-gray-100">
-            Arjun K.
+            {user?.name || "Guest"}
           </span>
 
           <ChevronDown size={14} className="text-gray-400" />
@@ -251,15 +275,15 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
           <div
             className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-50"
             style={{
-              background: 'rgba(17, 24, 39, 0.98)',
-              border: '1px solid rgba(45, 55, 72, 0.6)',
-              backdropFilter: 'blur(20px)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              background: "rgba(17, 24, 39, 0.98)",
+              border: "1px solid rgba(45, 55, 72, 0.6)",
+              backdropFilter: "blur(20px)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
             }}
           >
             {[
-              { icon: User, label: 'Profile' },
-              { icon: Settings, label: 'Settings' },
+              { icon: User, label: "Profile" },
+              { icon: Settings, label: "Settings" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -278,7 +302,7 @@ const Topbar = ({pageTitle, onMobileMenuToggle }) => {
         )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Topbar
+export default Topbar;

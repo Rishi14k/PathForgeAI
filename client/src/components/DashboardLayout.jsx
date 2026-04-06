@@ -6,8 +6,7 @@ import Topbar from "./Topbar";
 import { Outlet } from "react-router-dom";
 
 
-const DashboardLayout = ({children,pageTitle}) => {
-    console.log(children)
+const DashboardLayout = ({pageTitle}) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   return (

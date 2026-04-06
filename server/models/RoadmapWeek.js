@@ -21,6 +21,10 @@ const roadmapWeekSchema = new mongoose.Schema({
     projectCompleted:{
         type:Boolean,
         default:false
+    },
+    isCompleted:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true})
 

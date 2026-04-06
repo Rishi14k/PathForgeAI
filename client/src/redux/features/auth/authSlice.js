@@ -153,7 +153,7 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
-        console.log(action.payload);
+        // console.log(action.payload);
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.data;
@@ -164,9 +164,17 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(getMeThunk.pending,(state)=>{
+        state.loading=true
+      })
       .addCase(getMeThunk.fulfilled, (state, action) => {
+        state.loading=false
         state.user = action.payload.data;
         state.isAuthenticated = true;
+      })
+      .addCase(getMeThunk.rejected,(state,action)=>{
+        state.loading=false
+        state.error=action.payload
       })
       .addCase(googleLoginThunk.pending, (state) => {
         state.loading = true;
@@ -190,6 +198,9 @@ const authSlice = createSlice({
         state.token = null
         state.isAuthenticated = false
         localStorage.removeItem("token")
+      })
+      .addCase(logoutThunk.rejected,(state,action)=>{
+        state.error = action.payload
       })
 
   },

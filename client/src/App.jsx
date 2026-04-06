@@ -15,6 +15,8 @@ import MyroadmapContent from "./UserDashboard/myRoadmaps/components/MyroadmapCon
 import CreateRoadmapContent from "./UserDashboard/createRoadmap/CreateRoadmapContent";
 import ProgressContent from "./UserDashboard/progress/ProgressContent";
 import SettingsContent from "./UserDashboard/settings/SettingsContent";
+import RoadmapDetailContent from "./UserDashboard/roadmap/RoadmapDetailContent";
+import GlobalLoader from "./components/GlobalLoader";
 
 const App = () => {
   const dispath = useDispatch();
@@ -29,6 +31,7 @@ const App = () => {
   return (
     <main className="min-h-screen bg-[#0E0F14]">
       {/* <Navbar /> */}
+      <GlobalLoader/>
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="/features" element={<Features />} /> */}
@@ -43,6 +46,9 @@ const App = () => {
             <Route path="create-roadmap" element={<CreateRoadmapContent/>}/>
             <Route path="progress" element={<ProgressContent/>}/>
             <Route path="settings" element={<SettingsContent/>}/>
+
+            <Route path="roadmap/:roadmapId" element={<RoadmapDetailContent/>} />
+
           </Route>
         </Route>
       </Routes>

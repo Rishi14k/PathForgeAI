@@ -24,7 +24,6 @@ const steps = [
   { id: 'step-topic', number: 1, label: 'Topic & Level' },
   { id: 'step-prefs', number: 2, label: 'Preferences' },
   { id: 'step-generate', number: 3, label: 'Generating' },
-  { id: 'step-preview', number: 4, label: 'Preview' },
 ];
 
 
@@ -96,17 +95,7 @@ const CreateRoadmapContent = () => {
               <StepThree formData={formData} onComplete={goNext} />
             </motion.div>
           )}
-          {currentStep === 4 && (
-            <motion.div
-              key="step-4"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.4 }}
-            >
-              <StepFour formData={formData} onRegenerate={() => setCurrentStep(1)} />
-            </motion.div>
-          )}
+         
         </AnimatePresence>
       </div>
     </div>  )

@@ -1,18 +1,19 @@
-import React from 'react'
-import { useState } from 'react'
-import {motion} from "framer-motion"
-import WelcomeHero from './WelcomeHero'
-import StateCard from './StateCard'
-import RoadmapTimeline from './RoadmapTimeline'
-import ProgressChart from './ProgressChart'
-import EmptyState from './EmptyState'
+import React from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import WelcomeHero from "./WelcomeHero";
+import StateCard from "./StateCard";
+import RoadmapTimeline from "./RoadmapTimeline";
+import ProgressChart from "./ProgressChart";
+import EmptyState from "./EmptyState";
+import { useSelector } from "react-redux";
 
-const HAS_ROADMAP = true
 const DashboardContent = () => {
 
-    const [hasroadmap] = useState(HAS_ROADMAP)
+  const hasroadmap = useSelector((state)=>state.dashboard.data?.data?.roadmapGenerated)
+//   console.log("first",hasroadmap)
 
-     const containerVariants = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -22,26 +23,24 @@ const DashboardContent = () => {
 
   return (
     <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className='space-y-8'
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
     >
-        <WelcomeHero/>
-        <StateCard/>
+      <WelcomeHero />
+      <StateCard />
 
-        {
-            hasroadmap ? (
-                <>
-                    <RoadmapTimeline/>
-                    <ProgressChart/>
-                </>
-            ):(
-                <EmptyState/>
-            )
-        }
+      {hasroadmap !== 0 ? (
+        <>
+          {/* <RoadmapTimeline/> */}
+          <ProgressChart />
+        </>
+      ) : (
+        <EmptyState />
+      )}
     </motion.div>
-  )
-}
+  );
+};
 
-export default DashboardContent
+export default DashboardContent;

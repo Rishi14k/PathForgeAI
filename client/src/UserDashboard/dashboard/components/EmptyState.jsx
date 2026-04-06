@@ -48,7 +48,7 @@ const EmptyState = () => {
         personalized week-by-week roadmap with curated resources and projects.
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
-        <Link href="/create-roadmap">
+        <Link to="/dashboard/create-roadmap">
           <motion.button
             whileHover={{ scale: 1.03, y: -1 }}
             whileTap={{ scale: 0.97 }}

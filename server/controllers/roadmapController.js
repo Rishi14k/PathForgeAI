@@ -3,12 +3,21 @@ const RoadmapProgress = require("../models/RoadmapProgress");
 const RoadmapTask = require("../models/RoadmapTask");
 const RoadmapWeek = require("../models/RoadmapWeek");
 const User = require("../models/User");
+const { calculateAchievements } = require("../services/achivmentsService");
 const { generateRoadmapAI } = require("../services/aiService");
 const updateStreak = require("../services/updateStreak");
 
 const generateRoadmap = async (req, res) => {
   try {
-    const { goal, level, hoursPerDay, weekNumber } = req.body;
+    const {
+      goal,
+      level,
+      hoursPerDay,
+      weekNumber,
+      learningStyles = [],
+      resourcePreferences = [],
+    } = req.body;
+
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({
@@ -16,14 +25,11 @@ const generateRoadmap = async (req, res) => {
         message: "User not found",
       });
     }
-
-    if (
-      goal === undefined ||
-      level === undefined ||
-      hoursPerDay === undefined ||
-      weekNumber === undefined
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!goal || !level || !hoursPerDay || !weekNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Required fields missing",
+      });
     }
 
     const now = new Date();
@@ -51,11 +57,35 @@ const generateRoadmap = async (req, res) => {
       });
     }
 
+    const allowedLearningStyles = [
+      "visual",
+      "reading",
+      "hands-on",
+      "structured",
+    ];
+
+    const allowedResources = [
+      "docs",
+      "videos",
+      "blogs",
+      "github",
+      "interactive",
+      "books",
+    ];
+    const filteredStyles = learningStyles.filter((style) =>
+      allowedLearningStyles.includes(style),
+    );
+    const filteredResources = resourcePreferences.filter((resource) =>
+      allowedResources.includes(resource),
+    );
+
     const existingRoadmap = await Roadmap.findOne({
       userId: req.user.userId,
       goal,
       skillLevel: level,
       dailyStudyTime: hoursPerDay,
+      learningStyles: filteredStyles,
+      resourcePreferences: filteredResources,
     });
 
     if (existingRoadmap) {
@@ -71,6 +101,8 @@ const generateRoadmap = async (req, res) => {
       level,
       hoursPerDay,
       weekNumber,
+      learningStyles: filteredStyles,
+      resourcePreferences: filteredResources,
     });
 
     // console.dir(roadmap, { depth: null })
@@ -89,6 +121,8 @@ const generateRoadmap = async (req, res) => {
       skillLevel: level,
       dailyStudyTime: hoursPerDay,
       durationWeeks: weekNumber,
+      learningStyles: filteredStyles,
+      resourcePreferences: filteredResources,
       status: "active",
       aiRawResponse: JSON.stringify(roadmap),
       aiProvider: "gemini",
@@ -227,7 +261,8 @@ const getRoadmapById = async (req, res) => {
 const toggleTaskCompletion = async (req, res) => {
   try {
     const { taskId } = req.params;
-    const userId = req.user.userId;
+    const userId = req.user?.userId;
+    // console.log("iserid",userId)
     if (!taskId) {
       return res
         .status(400)
@@ -243,6 +278,13 @@ const toggleTaskCompletion = async (req, res) => {
     task.isCompleted = !task.isCompleted;
     task.completedAt = task.isCompleted ? new Date() : null;
     await task.save();
+
+    const siblingTasks = await RoadmapTask.find({ weekId: task.weekId });
+    const allTaskDone = siblingTasks.every((t) => t.isCompleted);
+
+    await RoadmapWeek.findByIdAndUpdate(task.weekId, {
+      isCompleted: allTaskDone,
+    });
 
     const progress = await RoadmapProgress.findOne({
       roadmapId: task.roadmapId,
@@ -271,10 +313,42 @@ const toggleTaskCompletion = async (req, res) => {
       message: "Task status updated",
       task,
       progress,
+      weekCompleted: allTaskDone,
     });
   } catch (error) {
     console.error("Toggle task error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const toggleProjectCompletion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const week = await RoadmapWeek.findById(id);
+    if (!week) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Week not found" });
+    }
+
+    week.projectCompleted = !week.projectCompleted;
+    await week.save();
+
+    const siblingTasks = await RoadmapTask.find({ weekId: week._id });
+    const allTasksDone = siblingTasks.every((t) => t.isCompleted);
+
+    // The week is truly complete ONLY if tasks AND project are done
+    week.isCompleted = allTasksDone && week.projectCompleted;
+    await week.save();
+
+    res.status(200).json({
+      success: true,
+      weekId: id,
+      projectCompleted: week.projectCompleted,
+      isCompleted: week.isCompleted,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -347,21 +421,49 @@ const getWeekProgress = async (req, res) => {
 
 const getMyRoadMap = async (req, res) => {
   try {
-    const { roadmapId } = req.params;
-    if (!roadmapId) {
+    const userId = req.user?.userId;
+    if (!userId) {
       return res
         .status(400)
-        .json({ success: false, message: "Roadmap Id is required" });
+        .json({ success: false, message: "User Id is required" });
     }
 
-    const roadmap = await Roadmap.findById(roadmapId).select("-aiRawResponse");
+    const roadmap = await Roadmap.find({ userId })
+      .select("-aiRawResponse")
+      .lean();
     if (!roadmap) {
       return res
         .status(404)
         .json({ success: false, message: "Roadmap not found" });
     }
+    if (!roadmap.length) {
+      return res.status(200).json({
+        meassge: "No roadmap found",
+        success: true,
+        data: [],
+      });
+    }
+    const roadmapIds = roadmap.map((r) => r._id);
 
-    res.status(200).json({ success: true, data: roadmap });
+    const progress = await RoadmapProgress.find({
+      userId,
+      roadmapId: { $in: roadmapIds },
+    }).lean();
+    const progressMap = {};
+    progress.forEach((p) => {
+      progressMap[p.roadmapId.toString()] = p;
+    });
+
+    const finalData = roadmap.map((r) => ({
+      ...r,
+      progress: progressMap[r._id.toString()] || {
+        totalTasks: 0,
+        completedTasks: 0,
+        progressPercent: 0,
+      },
+    }));
+
+    res.status(200).json({ success: true, data: finalData });
   } catch (error) {
     console.log("Error in getting roadmap", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -397,7 +499,7 @@ const dashBoardState = async (req, res) => {
     }
 
     const user = await User.findById(userId).select(
-      "roadmapGenerated planType",
+      "roadmapGenerated planType streak",
     );
     if (!user) {
       return res
@@ -408,37 +510,146 @@ const dashBoardState = async (req, res) => {
     const roadmapGenerated = user.roadmapGenerated;
     const planType = user.planType;
 
-    const roadmap = await Roadmap.find({ userId });
-    const progress = await RoadmapProgress.find({userId });
+    const roadmap = await Roadmap.findOne({ userId });
+    const progress = await RoadmapProgress.findOne({ userId });
     // console.log(progress)
-    if (!progress) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Progress not found" });
-    }
-    const totalRoadmaps = roadmap.length;
-    const status = roadmap.status;
-    const totalTask = progress.totalTasks;
-    const completedTasks = progress.completedTasks;
-    const progressPercent = progress.progressPercent;
+    // if (!progress) {
+    //   return res
+    //     .status(404)
+    //     .json({ success: false, message: "Progress not found" });
+    // }
+    const totalRoadmaps = roadmap?.length || 0;
+    const status = roadmap?.status;
+    const totalTask = progress?.totalTasks || 0;
+    const completedTasks = progress?.completedTasks || 0;
+    const progressPercent = progress?.progressPercent || 0;
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: {
-          roadmapGenerated,
-          planType,
-          totalRoadmaps,
-          status,
-          totalTask,
-          completedTasks,
-          progressPercent,
-        },
-      });
+    res.status(200).json({
+      success: true,
+      data: {
+        roadmapGenerated,
+        planType,
+        streak: user.streak.currentStreak || 0,
+        logestStreak: user.streak.longestStreak || 0,
+        totalRoadmaps,
+        status,
+        totalTask,
+        completedTasks,
+        progressPercent,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const getUserProgress = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId)
+
+    const progressDocs = await RoadmapProgress.find({ userId }).populate(
+      "roadmapId",
+      "goal durationWeeks skillLevel",
+    );
+    if (!progressDocs.length) {
+      return res.json({
+        stats: {},
+        weeklyActivity: [],
+        monthlyProgress: [],
+        roadmapProgress: [],
+        achievements: [],
+      });
+    }
+
+    const totalTasksDone = progressDocs.reduce(
+      (sum, r) => sum + r.completedTasks,
+      0,
+    );
+    const roadmapsActive = progressDocs.length;
+
+    const hoursLearned = Number((totalTasksDone * 0.5).toFixed(1));
+
+    const activeRoadmap = progressDocs[0];
+
+    const weeks = await RoadmapWeek.find({
+      roadmapId: activeRoadmap.roadmapId._id,
+    }).sort({ weekNumber: 1 });
+
+    const weekIds = weeks.map((w) => w._id);
+
+    const tasks = await RoadmapTask.find({
+      weekId: { $in: weekIds },
+    });
+
+    /* ---------------- WEEKLY ACTIVITY ---------------- */
+
+    const weeklyActivity = weeks.map((week) => {
+      const weekTasks = tasks.filter(
+        (t) => t.weekId.toString() === week._id.toString(),
+      );
+
+      const completedTasks = weekTasks.filter((t) => t.isCompleted).length;
+
+      return {
+        week: `W${week.weekNumber}`,
+        tasks: completedTasks,
+        hours: Number((completedTasks * 0.5).toFixed(1)),
+      };
+    });
+
+    /* ---------------- MONTHLY PROGRESS ---------------- */
+
+    const monthlyProgress = progressDocs.map((r, i) => ({
+      month: `M${i + 1}`,
+      progress: r.progressPercent,
+    }));
+
+    /* ---------------- ROADMAP PROGRESS ---------------- */
+
+    const roadmapProgress = await Promise.all(
+      progressDocs.map(async (r) => {
+        const totalWeeks = await RoadmapWeek.countDocuments({
+          roadmapId: r.roadmapId._id,
+        });
+
+        const completedWeeks = await RoadmapWeek.countDocuments({
+          roadmapId: r.roadmapId._id,
+          isCompleted: true,
+        });
+
+        return {
+          name: r.roadmapId.goal,
+          progress: r.progressPercent,
+          weeks: `${completedWeeks}/${totalWeeks}`,
+        };
+      }),
+    );
+
+    const achievements = calculateAchievements({
+      totalTasksDone,
+      roadmapsActive,
+      hoursLearned,
+      streakDays:user?.streak?.currentStreak,
+    });
+
+    res.json({
+      stats: {
+        totalTasksDone,
+        hoursLearned,
+        roadmapsActive,
+      },
+      weeklyActivity,
+      monthlyProgress,
+      roadmapProgress,
+      achievements,
+      streak:user?.streak?.currentStreak,
+      longestStreak:user?.streak?.longestStreak
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -451,4 +662,6 @@ module.exports = {
   getMyRoadMap,
   getStreak,
   dashBoardState,
+  toggleProjectCompletion,
+  getUserProgress,
 };

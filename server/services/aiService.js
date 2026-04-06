@@ -3,50 +3,100 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+const generateRoadmapAI = async (payload) => {
+  const MAX_RETRIES = 3;
 
-const generateRoadmapAI = async ({ goal, level, hoursPerDay,weekNumber }) => {
-  try {
-    // Specify the model - 'gemini-1.5-flash' is fast and great for structured JSON
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-flash-preview",
-      // System instructions are passed during model initialization in Gemini
-      systemInstruction: "You are an expert career mentor and curriculum designer. Generate realistic study plans. Always respond ONLY in JSON format.",
-    });
+  const models = [
+    "gemini-3-flash-preview", // primary
+    "gemini-1.5-flash", // fallback
+  ];
 
-    const prompt = `Create a ${weekNumber}-week roadmap for becoming a ${goal}.
-      Level: ${level}
-      Daily Study Time: ${hoursPerDay} hours
+  for (const modelName of models) {
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        console.log(`Trying ${modelName} (Attempt ${attempt})`);
 
-      Return response strictly in this JSON format:
-      {
-        "weeks": [
-          {
-            "week": 1,
-            "topics": ["topic1", "topic2"],
-            "daily_tasks": ["task1", "task2"],
-            "project": "string"
-          }
-        ]
-      }`;
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          systemInstruction:
+            "You are an expert career mentor and curriculum designer. Always respond ONLY in valid JSON.",
+        });
 
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        // This ensures the model outputs valid JSON
-        responseMimeType: "application/json",
-        temperature: 0.7,
-      },
-    });
+        const prompt = buildPrompt(payload);
 
-    const responseText = result.response.text();
-    
-    // Gemini handles the formatting, so we can parse it directly
-    return JSON.parse(responseText);
+        const result = await model.generateContent({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.7,
+          },
+        });
 
-  } catch (error) {
-    console.error("Gemini Generation Error:", error);
-    throw new Error("Failed to generate roadmap");
+        return JSON.parse(result.response.text());
+      } catch (error) {
+        console.error(`Error with ${modelName}:`, error.message);
+
+        // retry only if 503
+        if (error.status === 503 && attempt < MAX_RETRIES) {
+          await new Promise((res) => setTimeout(res, 2000 * attempt));
+          continue;
+        }
+
+        break;
+      }
+    }
   }
+
+  throw new Error("All AI models failed");
 };
 
 module.exports = { generateRoadmapAI };
+
+const buildPrompt = ({
+  goal,
+  level,
+  hoursPerDay,
+  weekNumber,
+  learningStyles,
+  resourcePreferences,
+}) => `
+Create a personalized ${weekNumber}-week roadmap.
+
+GOAL: ${goal}
+LEVEL: ${level}
+DAILY STUDY TIME: ${hoursPerDay} hours
+
+USER LEARNING STYLES:
+${learningStyles.join(", ")}
+
+PREFERRED RESOURCE TYPES:
+${resourcePreferences.join(", ")}
+
+INSTRUCTIONS:
+- Prioritize learning methods matching user's learning styles.
+- Select tasks aligned with preferred resource types.
+- Balance theory + practice.
+- Include realistic projects.
+- Tasks must fit daily study time.
+- Progress difficulty gradually.
+
+Return STRICTLY in this JSON format:
+
+{
+  "weeks": [
+    {
+      "week": 1,
+      "topics": [],
+      "daily_tasks": [],
+      "project": "",
+      "recommended_resources": [
+        {
+          "type": "video | docs | blog | github | interactive | book",
+          "title": "",
+          "reason": ""
+        }
+      ]
+    }
+  ]
+}
+`;
