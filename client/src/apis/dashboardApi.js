@@ -39,3 +39,8 @@ export const getStreak = async()=>{
     const res = await apiClient.get('/ai/streak')
     return res.data
 }
+
+export const disCoveryAnalyses = async(data)=>{
+    const res = await apiClient.post('/ai/discovery/analyze',data)
+    return res.data
+}

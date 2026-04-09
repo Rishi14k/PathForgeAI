@@ -12,52 +12,32 @@ import {
   RadialBar,
   Cell,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
+import { Zap } from "lucide-react";
 
-const weeklyData = [
-  { day: "Mon", tasks: 4, target: 5 },
-  { day: "Tue", tasks: 6, target: 5 },
-  { day: "Wed", tasks: 3, target: 5 },
-  { day: "Thu", tasks: 5, target: 5 },
-  { day: "Fri", tasks: 7, target: 5 },
-  { day: "Sat", tasks: 2, target: 5 },
-  { day: "Sun", tasks: 1, target: 5 },
-];
+const ProgressChart = ({ roadmap, progress, weeks }) => {
+  // console.log("roadmap", roadmap);
+  // console.log("progress", progress);
 
-const completionData = [{ name: "Progress", value: 68, fill: "#7C3AED" }];
+  const navigate = useNavigate();
 
-const CustomBarTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        className="rounded-xl px-3 py-2.5"
-        style={{
-          background: "rgba(17, 24, 39, 0.98)",
-          border: "1px solid rgba(45, 55, 72, 0.6)",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-        }}
-      >
-        <p className="text-xs font-semibold mb-1" style={{ color: "#F9FAFB" }}>
-          {label}
-        </p>
-        {payload.map((entry, i) => (
-          <p key={`tt-${i}`} className="text-xs" style={{ color: "#9CA3AF" }}>
-            <span
-              style={{ color: entry.name === "tasks" ? "#7C3AED" : "#374151" }}
-            >
-              ●
-            </span>{" "}
-            {entry.name === "tasks" ? "Completed" : "Target"}:{" "}
-            <strong style={{ color: "#F9FAFB" }}>{entry.value}</strong>
-          </p>
-        ))}
-      </div>
-    );
-  }
+  const styleIcon = {
+    visual: "👁️",
+    "hands-on": "🛠️",
+    reading: "📚",
+    auditory: "🎧",
+  };
 
-  return null;
-};
+  const weekDone = weeks.filter((week) => week.isCompleted).length;
+  const totalWeeks = weeks.length;
+  const completionData = [
+    {
+      name: "Progress",
+      value: `${progress?.progressPercent}`,
+      fill: "#7C3AED",
+    },
+  ];
 
-const ProgressChart = () => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -65,7 +45,7 @@ const ProgressChart = () => {
       transition={{ delay: 0.3, duration: 0.5 }}
       className="grid grid-cols-1 lg:grid-cols-3 gap-5"
     >
-      <div
+      {/* <div
         className="lg:col-span-2 rounded-2xl p-6"
         style={{
           background: "rgba(17, 24, 39, 0.8)",
@@ -173,7 +153,110 @@ const ProgressChart = () => {
             </span>
           </div>
         </div>
+      </div> */}
+
+
+       <div
+        className="rounded-2xl p-6 flex flex-col justify-between"
+        style={{
+          background: "rgba(17, 24, 39, 0.8)",
+          border: "1px solid rgba(45, 55, 72, 0.5)",
+        }}
+      >
+        {/* Header */}
+        <div>
+          <h3
+            className="text-sm font-semibold mb-2"
+            style={{ color: "#F9FAFB" }}
+          >
+            Generate New Roadmap
+          </h3>
+
+          <p className="text-xs leading-relaxed" style={{ color: "#9CA3AF" }}>
+            Ready to level up? Create a fresh AI roadmap based on your new
+            goals, interests, and learning preferences.
+          </p>
+        </div>
+
+        {/* CTA Button */}
+        <button
+          onClick={() => navigate("/dashboard/generate-roadmap")}
+          className="flex items-center justify-center gap-3 mt-6 w-full py-2.5 rounded-lg text-sm font-semibold transition-all"
+          style={{
+            background: "linear-gradient(135deg, #7C3AED, #9F67FF)",
+            color: "#FFFFFF",
+            border: "1px solid rgba(124,58,237,0.4)",
+          }}
+        >
+              <span><Zap size={15} /></span>
+          Generate Roadmap
+        </button>
       </div>
+
+      <div
+        className="rounded-2xl p-6"
+        style={{
+          background: "rgba(17, 24, 39, 0.8)",
+          border: "1px solid rgba(45, 55, 72, 0.5)",
+        }}
+      >
+        <h3 className="text-sm font-semibold mb-1" style={{ color: "#F9FAFB" }}>
+          Learning Preferences
+        </h3>
+
+        <p className="text-xs mb-6" style={{ color: "#9CA3AF" }}>
+          Personalized learning style detected by AI
+        </p>
+
+        {/* Learning Styles */}
+        <div className="mb-5">
+          <p className="text-xs mb-2" style={{ color: "#9CA3AF" }}>
+            Learning Styles For Roadmap {roadmap?.goal}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {roadmap?.learningStyles &&
+              roadmap?.learningStyles?.map((style, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1.5 text-md rounded-lg font-medium"
+                  style={{
+                    background: "rgba(124,58,237,0.12)",
+                    color: "#C4B5FD",
+                    border: "1px solid rgba(124,58,237,0.25)",
+                  }}
+                >
+                  {styleIcon[style]} {style}{" "}
+                </span>
+              ))}
+          </div>
+        </div>
+
+        {/* Resource Preferences */}
+        <div>
+          <p className="text-xs mb-2" style={{ color: "#9CA3AF" }}>
+            Resource Preference
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {roadmap?.resourcePreferences &&
+              roadmap?.resourcePreferences?.map((res, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1.5 text-md rounded-lg font-medium"
+                  style={{
+                    background: "rgba(16,185,129,0.12)",
+                    color: "#6EE7B7",
+                    border: "1px solid rgba(16,185,129,0.25)",
+                  }}
+                >
+                  {res}
+                </span>
+              ))}
+          </div>
+        </div>
+      </div>
+
       {/* circular progress  */}
 
       <div
@@ -190,7 +273,7 @@ const ProgressChart = () => {
           Roadmap Progress
         </h3>
         <p className="text-xs mb-6 self-start" style={{ color: "#9CA3AF" }}>
-          React Developer path
+          {roadmap?.goal}
         </p>
 
         <div className="relative flex items-center justify-center">
@@ -225,7 +308,7 @@ const ProgressChart = () => {
               className="text-3xl font-bold mono"
               style={{ color: "#F9FAFB", fontVariantNumeric: "tabular-nums" }}
             >
-              68%
+              {progress?.progressPercent}%
             </span>
             <span className="text-xs" style={{ color: "#9CA3AF" }}>
               complete
@@ -235,9 +318,21 @@ const ProgressChart = () => {
 
         <div className="w-full space-y-3 mt-4">
           {[
-            { label: "Tasks done", value: "14/20", color: "#10B981" },
-            { label: "Weeks done", value: "1/8", color: "#7C3AED" },
-            { label: "Est. remaining", value: "~18 hrs", color: "#F59E0B" },
+            {
+              label: "Tasks done",
+              value: `${progress?.completedTasks}/${progress?.totalTasks}`,
+              color: "#10B981",
+            },
+            {
+              label: "Weeks done",
+              value: `${weekDone}/${totalWeeks}`,
+              color: "#7C3AED",
+            },
+            {
+              label: "Daily Study Time",
+              value: `${roadmap?.dailyStudyTime} hrs`,
+              color: "#F59E0B",
+            },
           ].map((item) => (
             <div
               key={`progress-meta-${item.label}`}
@@ -259,6 +354,8 @@ const ProgressChart = () => {
           ))}
         </div>
       </div>
+
+     
     </motion.div>
   );
 };

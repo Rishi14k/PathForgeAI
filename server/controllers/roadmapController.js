@@ -305,7 +305,7 @@ const toggleTaskCompletion = async (req, res) => {
     if (task.isCompleted) {
       const user = await User.findById(userId);
       updateStreak(user);
-      await user.save();
+      await user.save();  
     }
 
     res.status(200).json({
@@ -523,6 +523,7 @@ const dashBoardState = async (req, res) => {
     const totalTask = progress?.totalTasks || 0;
     const completedTasks = progress?.completedTasks || 0;
     const progressPercent = progress?.progressPercent || 0;
+    const currentRoadmap = roadmap?._id;
 
     res.status(200).json({
       success: true,
@@ -536,6 +537,7 @@ const dashBoardState = async (req, res) => {
         totalTask,
         completedTasks,
         progressPercent,
+        currentRoadmap,
       },
     });
   } catch (error) {

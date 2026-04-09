@@ -449,10 +449,10 @@ const RoadmapDetailContent = () => {
                             key={task?._id}
                             className="flex items-center gap-3 p-3 rounded-xl transition-all"
                             style={{
-                              background: task.completed
+                              background: task?.isCompleted
                                 ? "rgba(16, 185, 129, 0.05)"
                                 : "rgba(45, 55, 72, 0.15)",
-                              border: `1px solid ${task.completed ? "rgba(16, 185, 129, 0.15)" : "rgba(45, 55, 72, 0.3)"}`,
+                              border: `1px solid ${task?.isCompleted ? "rgba(16, 185, 129, 0.15)" : "rgba(45, 55, 72, 0.3)"}`,
                             }}
                             onClick={() => dispatch(toggleTaskThunk(task?._id))}
                           >

@@ -17,6 +17,8 @@ import ProgressContent from "./UserDashboard/progress/ProgressContent";
 import SettingsContent from "./UserDashboard/settings/SettingsContent";
 import RoadmapDetailContent from "./UserDashboard/roadmap/RoadmapDetailContent";
 import GlobalLoader from "./components/GlobalLoader";
+import DiscoveryContent from "./UserDashboard/discovery/DiscoveryContent";
+import DiscoveryResults from "./UserDashboard/discovery/components/DiscoveryResults";
 
 const App = () => {
   const dispath = useDispatch();
@@ -45,9 +47,12 @@ const App = () => {
             <Route path="my-roadmaps" element={<MyroadmapContent />} />
             <Route path="create-roadmap" element={<CreateRoadmapContent/>}/>
             <Route path="progress" element={<ProgressContent/>}/>
-            <Route path="settings" element={<SettingsContent/>}/>
+            <Route path="profile" element={<SettingsContent/>}/>
+            <Route path="discovery" element={<DiscoveryContent/>}/>
 
             <Route path="roadmap/:roadmapId" element={<RoadmapDetailContent/>} />
+
+            <Route path="discovery/results" element={<DiscoveryResults/>}/>
 
           </Route>
         </Route>

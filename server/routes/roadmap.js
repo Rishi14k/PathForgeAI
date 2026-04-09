@@ -11,6 +11,7 @@ const {
   toggleProjectCompletion,
   getUserProgress,
 } = require("../controllers/roadmapController");
+const {analyzeDiscovery}  = require('../controllers/discoveryController')
 const authMiddleware = require("../middlewares/authMiddleware");
 const roadmapLimiter = require("../middlewares/roadmapLimiter");
 const router = express.Router();
@@ -36,5 +37,8 @@ router.get("/streak", authMiddleware, getStreak);
 router.get("/dashboard/state", authMiddleware, dashBoardState);
 
 router.get('/user/progress',authMiddleware,getUserProgress)
+
+
+router.post('/discovery/analyze',authMiddleware,analyzeDiscovery)
 
 module.exports = router;

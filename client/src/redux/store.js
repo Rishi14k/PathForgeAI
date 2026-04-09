@@ -6,7 +6,7 @@ import roadmapReducer from './features/dashboard/roadmapSlice'
 import createRoadmapReducer from './features/dashboard/createRoadmapSlice'
 import singleRoadmapreducer from './features/dashboard/singleRoadmapSlice'
 import progressReducer from './features/dashboard/progressSlice'
-
+import discoverReducer from './features/dashboard/discoverySlice'
 
 export const store = configureStore({
     reducer:{
@@ -16,6 +16,7 @@ export const store = configureStore({
         roadmap:roadmapReducer,
         createRoadmap:createRoadmapReducer,
         singleRoadmap:singleRoadmapreducer,
-        progress:progressReducer
+        progress:progressReducer,
+        discovery:discoverReducer
     }
 })

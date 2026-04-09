@@ -9,7 +9,9 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutThunk } from "../redux/features/auth/authSlice";
 
 const notifications = [
   {
@@ -44,7 +46,12 @@ const notifications = [
 
 const Topbar = ({ pageTitle, onMobileMenuToggle }) => {
 
+   const dispatch = useDispatch()
+    const handleLogout = ()=>{
+      dispatch(logoutThunk())
+    }
   const {user} = useSelector((state)=>state.auth)
+  const navigate = useNavigate()
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -145,7 +152,7 @@ const Topbar = ({ pageTitle, onMobileMenuToggle }) => {
       </div> */}
 
       {/* Notifications */}
-      <div className="relative">
+      {/* <div className="relative">
         <button
           onClick={() => {
             setNotifOpen(!notifOpen);
@@ -235,7 +242,7 @@ const Topbar = ({ pageTitle, onMobileMenuToggle }) => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* User Menu */}
       <div className="relative">
@@ -283,9 +290,9 @@ const Topbar = ({ pageTitle, onMobileMenuToggle }) => {
           >
             {[
               { icon: User, label: "Profile" },
-              { icon: Settings, label: "Settings" },
             ].map((item) => (
               <div
+              onClick={()=>navigate('/dashboard/profile')}
                 key={item.label}
                 className="flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-violet-500/10 hover:text-white text-gray-400"
               >
@@ -294,7 +301,7 @@ const Topbar = ({ pageTitle, onMobileMenuToggle }) => {
               </div>
             ))}
 
-            <div className="flex items-center gap-3 px-4 py-2.5 cursor-pointer border-t border-gray-700 text-red-500 hover:bg-red-500/10">
+            <div onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 cursor-pointer border-t border-gray-700 text-red-500 hover:bg-red-500/10">
               <LogOut size={16} />
               <span className="text-sm font-medium">Logout</span>
             </div>

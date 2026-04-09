@@ -11,14 +11,14 @@ const userSchema = new mongoose.Schema(
       unique: true,
       sparse: true,
     },
-   password: {
-    type: String,
-    select:false,
-    // This function makes password required ONLY if NOT using Google
-    required: function() {
-      return this.authProvider !== 'google';
+    password: {
+      type: String,
+      select: false,
+      // This function makes password required ONLY if NOT using Google
+      required: function () {
+        return this.authProvider !== "google";
+      },
     },
-  },
     googleId: {
       type: String,
       sparse: true,
@@ -43,9 +43,13 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
     roadmapResetDate: {
-  type: Date,
-  default: Date.now
-},
+      type: Date,
+      default: Date.now,
+    },
+    discoveryGenerated:{
+      type:Number,
+      default:0
+    },
     streak: {
       currentStreak: {
         type: Number,

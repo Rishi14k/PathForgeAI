@@ -7,6 +7,7 @@ import {
   Map,
   Settings,
   Sparkles,
+  TextSearch,
   TrendingUp,
   X,
 } from "lucide-react";
@@ -22,6 +23,12 @@ const navItems = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
+  },
+    {
+    key: "nav-discovery",
+    label: "Discovery",
+    icon: TextSearch,
+    href: "/dashboard/discovery",
   },
   {
     key: "nav-roadmaps",
@@ -45,8 +52,9 @@ const navItems = [
     key: "nav-settings",
     label: "Profile",
     icon: Fingerprint,
-    href: "/dashboard/settings",
+    href: "/dashboard/profile",
   },
+ 
 ];
 
 const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
