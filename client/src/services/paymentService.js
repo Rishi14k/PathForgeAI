@@ -1,11 +1,12 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import apiClient from "../apis/apiClient";
 
 export const startPayment = async (token) => {
   try {
     // 1️⃣ Create order
-    const { data: order } = await axios.post(
-      "http://localhost:5000/api/payment/create-order",
+    const { data: order } = await apiClient.post(
+      "/payment/create-order",
       {},
       {
         headers: {
@@ -43,8 +44,8 @@ export const startPayment = async (token) => {
 
 const verifyPayment = async (paymentData, token) => {
   try {
-    await axios.post(
-      "http://localhost:5000/api/payment/verify",
+    await apiClient.post(
+      "/payment/verify",
       paymentData,
       {
         headers: {
