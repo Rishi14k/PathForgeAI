@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000
 connectDB()
 app.use(express.json())
 app.use(cors({
-     origin: 'http://localhost:5173 || https://skillorbit-7ylj.onrender.com',
+     origin: process.env.ACCESS_URL,
      credentials: true,
 }))
 
