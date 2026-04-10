@@ -1,4 +1,5 @@
 import {
+  BadgeIndianRupee,
   ChevronLeft,
   ChevronRight,
   Fingerprint,
@@ -13,7 +14,6 @@ import {
 } from "lucide-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import Icon from "./Icon";
 import { useDispatch } from "react-redux";
 import { logoutThunk } from "../redux/features/auth/authSlice";
 
@@ -54,6 +54,12 @@ const navItems = [
     icon: Fingerprint,
     href: "/dashboard/profile",
   },
+  {
+    key:"nav-pricing",
+    label:"Pricing",
+    icon:BadgeIndianRupee,
+    href:'/dashboard/pricing'
+  },
  
 ];
 
@@ -86,7 +92,7 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
           style={{ borderBottom: "1px solid rgba(45, 55, 72, 0.4)" }}
         >
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex-shrink-0">😁</div>
+            {/* <div className="flex-shrink-0">SO</div> */}
             {!collapsed && (
               <span
                 className="font-bold text-lg tracking-tight transition-all duration-200"

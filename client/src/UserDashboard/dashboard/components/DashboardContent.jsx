@@ -8,6 +8,7 @@ import ProgressChart from "./ProgressChart";
 import EmptyState from "./EmptyState";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRoadmapByIdThunk } from "../../../redux/features/dashboard/singleRoadmapSlice";
+import UpgradeButton from "../../../components/UpgradeButton";
 
 const DashboardContent = () => {
 
@@ -61,6 +62,7 @@ const DashboardContent = () => {
       animate="visible"
       className="space-y-8"
     >
+      {/* <UpgradeButton/> */}
       <WelcomeHero />
       <StateCard />
 

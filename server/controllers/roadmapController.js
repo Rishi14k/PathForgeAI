@@ -1,3 +1,4 @@
+const Discovery = require("../models/Discovery");
 const Roadmap = require("../models/Roadmap");
 const RoadmapProgress = require("../models/RoadmapProgress");
 const RoadmapTask = require("../models/RoadmapTask");
@@ -6,6 +7,7 @@ const User = require("../models/User");
 const { calculateAchievements } = require("../services/achivmentsService");
 const { generateRoadmapAI } = require("../services/aiService");
 const updateStreak = require("../services/updateStreak");
+const { canGenerateRoadmap } = require("../utils/accessControl");
 
 const generateRoadmap = async (req, res) => {
   try {
@@ -32,30 +34,38 @@ const generateRoadmap = async (req, res) => {
       });
     }
 
-    const now = new Date();
-    const lastReset = new Date(user.roadmapResetDate);
+    // const now = new Date();
+    // const lastReset = new Date(user.roadmapResetDate);
 
-    if (
-      now.getMonth() !== lastReset.getMonth() ||
-      now.getFullYear() !== lastReset.getFullYear()
-    ) {
-      user.roadmapGenerated = 0;
-      user.roadmapResetDate = now;
-      await user.save();
-    }
+    // if (
+    //   now.getMonth() !== lastReset.getMonth() ||
+    //   now.getFullYear() !== lastReset.getFullYear()
+    // ) {
+    //   user.roadmapGenerated = 0;
+    //   user.roadmapResetDate = now;
+    //   await user.save();
+    // }
 
-    let maxLimit = 2;
+    // let maxLimit = 2;
 
-    if (user.planType === "paid") {
-      maxLimit = 10;
-    }
+    // if (user.planType === "paid") {
+    //   maxLimit = 10;
+    // }
 
-    if (user.roadmapGenerated >= maxLimit) {
-      return res.status(403).json({
-        success: false,
-        message: `You reached your monthly roadmap limit (${maxLimit}). Upgrade your plan.`,
-      });
-    }
+    // if (user.roadmapGenerated >= maxLimit) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: `You reached your monthly roadmap limit (${maxLimit}). Upgrade your plan.`,
+    //   });
+    // }
+
+      if (!canGenerateRoadmap(user)) {
+    return res.status(403).json({
+      success: false,
+      code: "PAYMENT_REQUIRED",
+      message: "Upgrade to generate more roadmaps",
+    });
+  }
 
     const allowedLearningStyles = [
       "visual",
@@ -178,12 +188,11 @@ const generateRoadmap = async (req, res) => {
     user.roadmapGenerated += 1;
     await user.save();
 
-    const remaining = maxLimit - user.roadmapGenerated;
+    // const remaining = maxLimit - user.roadmapGenerated;
 
     res.status(200).json({
       success: true,
       data: roadmapData,
-      remainingRoadmaps: remaining,
       message: "Roadmap generated successfully!",
     });
   } catch (error) {
@@ -399,8 +408,8 @@ const getWeekProgress = async (req, res) => {
 
     const tasks = await RoadmapTask.find({ weekId: week._id });
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter((task) => task.isCompleted).length;
-    const progressPercent = Math.round((completedTasks / totalTasks) * 100);
+    const completedTasks = tasks.filter((task) => task.isCompleted).length || 0;
+    const progressPercent = Math.round((completedTasks / totalTasks) * 100) || 0;
 
     res.status(200).json({
       success: true,
@@ -655,6 +664,55 @@ const getUserProgress = async (req, res) => {
   }
 };
 
+
+const getUsageStatus = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    // Fetch only the necessary fields for better performance
+    const user = await User.findById(userId).select(
+      "planType roadmapGenerated discoveryGenerated"
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const currentPlan = user.planType || "free";
+
+    const limits = {
+      free: {
+        roadmapLimit: 1,
+        discoveryLimit: 2,
+      },
+      paid: {
+        // Changed "pro" to "paid" to match your enum
+        roadmapLimit: Infinity,
+        discoveryLimit: Infinity,
+      },
+    };
+
+    const planLimits = limits[currentPlan];
+
+    res.json({
+      plan: currentPlan,
+      roadmap: {
+        used: user.roadmapGenerated || 0,
+        limit: planLimits.roadmapLimit,
+        allowed: (user.roadmapGenerated || 0) < planLimits.roadmapLimit,
+      },
+      discovery: {
+        used: user.discoveryGenerated || 0,
+        limit: planLimits.discoveryLimit,
+        allowed: (user.discoveryGenerated || 0) < planLimits.discoveryLimit,
+      },
+    });
+  } catch (err) {
+    console.error("Usage Check Error:", err);
+    res.status(500).json({ message: "Usage check failed" });
+  }
+};
+
 module.exports = {
   generateRoadmap,
   getRoadmapById,
@@ -666,4 +724,5 @@ module.exports = {
   dashBoardState,
   toggleProjectCompletion,
   getUserProgress,
+  getUsageStatus,
 };

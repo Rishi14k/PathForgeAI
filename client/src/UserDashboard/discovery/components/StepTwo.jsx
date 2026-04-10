@@ -175,9 +175,9 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
             type="submit"
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2 px-8 py-3 rounded-xl font-bold shadow-lg shadow-violet-500/20"
+            className="bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2 px-4 py-2 sm:px-8 sm:py-3 rounded-xl font-bold shadow-lg shadow-violet-500/20"
           >
-            Review & Continue
+            Discover
             <ArrowRight size={18} />
           </motion.button>
         </div>

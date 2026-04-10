@@ -7,21 +7,27 @@ import { Sparkles } from "lucide-react";
 import StepOne from "./components/StepOne";
 import StepTwo from "./components/StepTwo";
 import StepThree from "./components/StepThree";
-import StepFour from "./components/DiscoveryResults";
 import ProgressBar from "./components/ProgressBar";
-
-const steps = [
-  { id: "step-basics", number: 1, label: "Interests" },
-  { id: "step-thinking", number: 2, label: "Style" },
-  { id: "step-work", number: 3, label: "Preferences" },
-  { id: "step-final", number: 4, label: "Goals" },
-];
+import { useEffect } from "react";
+import UpgradeModal from "../../components/UpgradeModal";
+import {
+  getDiscoveryResultThunk,
+  getUsageStatusThunk,
+} from "../../redux/features/dashboard/usageSlice";
+import { useNavigate } from "react-router-dom";
 
 const DiscoveryContent = () => {
-  const { result, loading } = useSelector((state) => state.discovery);
+  const { loading } = useSelector((state) => state.discovery);
+  const { results } = useSelector((state) => state.usage);
 
-  console.log("red", result);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const usage = useSelector((s) => s.usage.data);
+  const usageStatus = useSelector((s) => s.usage.status);
+  // console.log("usage stst",usageStatus)
 
+  console.log("red", results);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -44,7 +50,7 @@ const DiscoveryContent = () => {
   const goNext = () => setCurrentStep((s) => Math.min(s + 1, 4));
   const goPrev = () => setCurrentStep((s) => Math.max(s - 1, 1));
 
-  console.log("res", result, "loading", loading, "stepstr", isStarted);
+  // console.log("res", result, "loading", loading, "stepstr", isStarted);
 
   // Animation Variants
   const stepVariants = {
@@ -53,10 +59,58 @@ const DiscoveryContent = () => {
     exit: { opacity: 0, x: -20 },
   };
 
+  useEffect(() => {
+    if (usageStatus === "idle") {
+      dispatch(getUsageStatusThunk());
+    }
+  }, [usageStatus, dispatch]);
+
+  useEffect(() => {
+    if (!results || results?.length === 0) {
+      dispatch(getDiscoveryResultThunk());
+    }
+  }, [dispatch, results]);
+
+  useEffect(() => {
+    if (usage && !usage?.discovery?.allowed) {
+      setShowUpgrade(true);
+    }
+  }, [usage]);
+
+  if (usageStatus === "loading" || !usage) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] text-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+          className="w-14 h-14 rounded-full border-2 border-indigo-500 border-t-transparent mb-6"
+        />
+
+        <h3 className="text-lg font-semibold text-white mb-2">
+          Preparing your AI workspace
+        </h3>
+
+        <p className="text-gray-400 text-sm max-w-sm">
+          Checking your plan access and available roadmap generations...
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="max-w-4xl mx-auto p-4 min-h-screen">
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => {
+          setShowUpgrade(false);
+          navigate("/dashboard");
+        }}
+        onUpgrade={() => {
+          navigate("/pricing");
+        }}
+      />
+
       {/* 1. Intro Screen */}
-      {!isStarted && !loading && (
+      {!showUpgrade && !isStarted && !loading && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -128,6 +182,23 @@ const DiscoveryContent = () => {
             {/* Subtle Glow Effect */}
             <div className="absolute inset-0 rounded-xl bg-violet-400/20 blur-xl group-hover:blur-2xl transition-all -z-10" />
           </button>
+
+          {/* see result button  */}
+
+          {results?.data?.length > 0 && (
+            <button
+              onClick={() => navigate("/dashboard/discovery/results")}
+              className="group relative bg-violet-600 hover:bg-violet-700 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-lg shadow-violet-500/20 flex items-center gap-3 active:scale-95 mt-6"
+            >
+              Discovery Results{" "}
+              <Sparkles
+                className="group-hover:rotate-12 transition-transform"
+                size={20}
+              />
+              {/* Subtle Glow Effect */}
+              <div className="absolute inset-0 rounded-xl bg-violet-400/20 blur-xl group-hover:blur-2xl transition-all -z-10" />
+            </button>
+          )}
 
           <p className="mt-6 text-gray-500 text-xs uppercase tracking-widest font-medium">
             Takes approximately 4 minutes • Grow with SkillOrbit

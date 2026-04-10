@@ -1,9 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Landing/Home";
-import Pricing from "./pages/Landing/Pricing";
 import Login from "./pages/Landing/Login";
 import Register from "./pages/Landing/Register";
-import Dashboard from "./pages/Dashboard";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getMeThunk } from "./redux/features/auth/authSlice";
@@ -19,6 +17,7 @@ import RoadmapDetailContent from "./UserDashboard/roadmap/RoadmapDetailContent";
 import GlobalLoader from "./components/GlobalLoader";
 import DiscoveryContent from "./UserDashboard/discovery/DiscoveryContent";
 import DiscoveryResults from "./UserDashboard/discovery/components/DiscoveryResults";
+import PricingPage from "./pages/PricingPage";
 
 const App = () => {
   const dispath = useDispatch();
@@ -33,11 +32,11 @@ const App = () => {
   return (
     <main className="min-h-screen bg-[#0E0F14]">
       {/* <Navbar /> */}
-      <GlobalLoader/>
+      <GlobalLoader />
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="/features" element={<Features />} /> */}
-        <Route path="/pricing" element={<Pricing />} />
+        {/* <Route path="/pricing" element={<Pricing />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
 
@@ -45,15 +44,19 @@ const App = () => {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardContent />} />
             <Route path="my-roadmaps" element={<MyroadmapContent />} />
-            <Route path="create-roadmap" element={<CreateRoadmapContent/>}/>
-            <Route path="progress" element={<ProgressContent/>}/>
-            <Route path="profile" element={<SettingsContent/>}/>
-            <Route path="discovery" element={<DiscoveryContent/>}/>
+            <Route path="create-roadmap" element={<CreateRoadmapContent />} />
+            <Route path="progress" element={<ProgressContent />} />
+            <Route path="profile" element={<SettingsContent />} />
+            <Route path="discovery" element={<DiscoveryContent />} />
 
-            <Route path="roadmap/:roadmapId" element={<RoadmapDetailContent/>} />
+            <Route
+              path="roadmap/:roadmapId"
+              element={<RoadmapDetailContent />}
+            />
 
-            <Route path="discovery/results" element={<DiscoveryResults/>}/>
+            <Route path="discovery/results" element={<DiscoveryResults />} />
 
+            <Route path="pricing" element={<PricingPage />} />
           </Route>
         </Route>
       </Routes>

@@ -104,6 +104,10 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
     if (!data.interests?.length)
       return toast.error("Select at least one interest");
 
+    if(!data.activities?.length){
+      return toast.error("Select at least one activity")
+    }
+
     if (!data.thinkingStyle) return toast.error("Select thinking style");
 
     if (!data.experienceLevel) return toast.error("Select experience level");
@@ -133,9 +137,9 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-0">
       <div
-        className="rounded-2xl p-6 lg:p-8 space-y-8"
+        className="rounded-2xl p-4 sm:p-6 lg:p-8 space-y-8"
         style={{
           background: "rgba(17, 24, 39, 0.8)",
           border: "1px solid rgba(45, 55, 72, 0.5)",
@@ -215,7 +219,7 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
             Activities you enjoy
           </label>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
             {predefinedActivities.map((item) => (
               <motion.button
                 key={item.id}
@@ -354,7 +358,7 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
               Preferred Learning Style
             </label>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
               {predefinedLearningStyles.map((item) => (
                 <motion.button
                   key={item.id}

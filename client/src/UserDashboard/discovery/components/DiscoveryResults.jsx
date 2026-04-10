@@ -1,16 +1,19 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import { Sparkles, Target, Clock, Trophy, ChevronRight, ArrowLeft } from "lucide-react";
 import CareerCard from "./CareerCard";
 import { useNavigate } from "react-router-dom";
+import { getDiscoveryResultThunk } from "../../../redux/features/dashboard/usageSlice";
 
 const DiscoveryResults = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const { result, loading } = useSelector((state) => state.discovery);
+  const {results} = useSelector((state)=>state.usage)
 
   // Use the specific nested array you mentioned: discoveryProfile.aiSuggestions
-  const suggestions = result.data || [];
+  const suggestions = result.data || results.data || [];
   // console.log("data", suggestions);
 
   const container = {
@@ -31,6 +34,10 @@ const DiscoveryResults = () => {
       navigate("/dashboard/discovery"); // or wherever your start page is
     }
   }, [suggestions, loading, navigate]);
+
+  useEffect(()=>{
+    dispatch(getDiscoveryResultThunk)
+  },[dispatch])
 
   return (
     <div className="space-y-8 animate-fadeIn">

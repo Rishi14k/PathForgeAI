@@ -11,7 +11,7 @@ const DashboardLayout = ({pageTitle}) => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   return (
     <div
-      className="flex h-screen overflow-hidden"
+      className="flex h-screen overflow-hidden "
       style={{ background: "#0B0F19" }}
     >
       {/* mobile overlay  */}
@@ -45,7 +45,7 @@ const DashboardLayout = ({pageTitle}) => {
 
         <main
           className="flex-1 overflow-y-auto overflow-x-hidden"
-          style={{ background: "#0B0F19" }}
+          // style={{ background: "#0B0F19" }}
         >
           <div className="px-4 py-6 lg:px-8 xl:px-10 2xl:px-12 max-w-screen-2xl mx-auto">
             <Outlet />

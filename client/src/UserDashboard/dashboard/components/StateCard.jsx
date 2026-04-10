@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Flame, CheckCircle2, BarChart3, BookOpen } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { dashboardStateThunk } from "../../../redux/features/dashboard/dashboardStateSlice";
+import GhostLock from "./GhostLock";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24, scale: 0.97 },
@@ -17,11 +18,13 @@ const cardVariants = {
 const StateCard = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.dashboard.data?.data);
- 
 
   useEffect(() => {
     dispatch(dashboardStateThunk());
   }, [dispatch]);
+
+  const isGhostMode =
+    !data || data.roadmapGenerated === 0 || data.totalTask === 0;
 
   if (!data) return <p className="text-white">Loading dashboard...</p>;
 
@@ -34,45 +37,53 @@ const StateCard = () => {
         Overview
       </h3>
 
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <StateCardUI
-          index={0}
-          label="Study Streak"
-          value={data.streak}
-          unit="days"
-          icon={Flame}
-          color="#F59E0B"
-          trend="Keep the fire alive 🔥"
-        />
+      <div className="relative">
+          {isGhostMode && <GhostLock />}
 
-        <StateCardUI
-          index={1}
-          label="Active Roadmaps"
-          value={data.roadmapGenerated}
-          icon={BookOpen}
-          color="#7C3AED"
-          trend={data.status}
-        />
+        <div
+          className={`grid grid-cols-2 xl:grid-cols-4 gap-4 transition-all duration-300 ${
+            isGhostMode ? "blur-[2px] opacity-60 pointer-events-none" : ""
+          }`}
+        >
+          <StateCardUI
+            index={0}
+            label="Study Streak"
+            value={data.streak}
+            unit="days"
+            icon={Flame}
+            color="#F59E0B"
+            trend="Keep the fire alive 🔥"
+          />
 
-        <StateCardUI
-          index={2}
-          label="Completed Tasks"
-          value={data.completedTasks}
-          unit={`/${data.totalTask}`}
-          icon={CheckCircle2}
-          color="#10B981"
-          trend={`${data.progressPercent}% completed`}
-        />
+          <StateCardUI
+            index={1}
+            label="Active Roadmaps"
+            value={data.roadmapGenerated}
+            icon={BookOpen}
+            color="#7C3AED"
+            trend={data.status}
+          />
 
-        <StateCardUI
-          index={3}
-          label="Overall Progress"
-          value={data.progressPercent}
-          unit="%"
-          icon={BarChart3}
-          color="#3B82F6"
-          trend="Learning in orbit 🚀"
-        />
+          <StateCardUI
+            index={2}
+            label="Completed Tasks"
+            value={data.completedTasks}
+            unit={`/${data.totalTask}`}
+            icon={CheckCircle2}
+            color="#10B981"
+            trend={`${data.progressPercent}% completed`}
+          />
+
+          <StateCardUI
+            index={3}
+            label="Overall Progress"
+            value={data.progressPercent}
+            unit="%"
+            icon={BarChart3}
+            color="#3B82F6"
+            trend="Learning in orbit"
+          />
+        </div>
       </div>
     </div>
   );

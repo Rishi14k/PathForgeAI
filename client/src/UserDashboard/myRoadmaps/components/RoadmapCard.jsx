@@ -107,15 +107,12 @@ const RoadmapCard = ({ roadmap }) => {
                 >
                   {[
                     { icon: ExternalLink, label: "Open" },
-                    {
-                      icon: roadmap.status === "active" ? Pause : Play,
-                      label: roadmap.status === "active" ? "Pause" : "Resume",
-                    },
-                    {
-                      icon: Trash2,
-                      label: "Delete",
-                      color: "#EF4444",
-                    },
+                   
+                    // {
+                    //   icon: Trash2,
+                    //   label: "Delete",
+                    //   color: "#EF4444",
+                    // },
                   ].map((item) => (
                     <button
                       key={item.label}

@@ -5,6 +5,7 @@ import HowItWorksSection from '../../components/Hero/HowItWorksSection'
 import PricingSection from '../../components/Hero/PricingSection'
 import Navbar from '../../components/Hero/Navbar'
 import Footer from '../../components/Hero/Footer'
+import PricingPage from '../PricingPage'
 
 const Home = () => {
   return (
@@ -13,7 +14,8 @@ const Home = () => {
         <HeroSection/>
         <FeaturesSection/>
         <HowItWorksSection/>
-        <PricingSection/>
+        {/* <PricingSection/> */}
+        <PricingPage/>
         <Footer/>
     </div>
   )

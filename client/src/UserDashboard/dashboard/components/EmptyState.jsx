@@ -1,117 +1,127 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Orbit, Sparkles, Compass, HelpCircle } from "lucide-react";
+import { ArrowRight, Orbit, Sparkles, Compass, Lightbulb, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const EmptyState = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.96, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative flex flex-col items-center text-center py-20 px-8 rounded-3xl overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, rgba(17,24,39,0.7), rgba(17,24,39,0.4))",
-        border: "1px dashed rgba(139,92,246,0.3)",
-      }}
-    >
-      {/* Glow Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-72 h-72 bg-violet-600/10 blur-[120px] rounded-full -top-20 left-1/2 -translate-x-1/2" />
-      </div>
-
-      {/* Icon */}
-      <div className="relative mb-8">
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ repeat: Infinity, duration: 4 }}
-          className="w-28 h-28 rounded-3xl flex items-center justify-center"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(124,58,237,0.25), rgba(159,103,255,0.1))",
-            boxShadow: "0 0 50px rgba(124,58,237,0.25)",
+    <div className="relative min-h-[600px] w-full flex items-center justify-center p-4">
+      {/* Abstract Background Elements - Adds depth without clutter */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+            opacity: [0.3, 0.2, 0.3] 
           }}
-        >
-          <Orbit size={54} className="text-violet-400" />
-        </motion.div>
-
-        <motion.div
-          className="absolute -top-2 -right-2"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        >
-          <Sparkles size={18} className="text-violet-300" />
-        </motion.div>
+          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-violet-600/20 blur-[120px] rounded-full"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.5, 1],
+            opacity: [0.2, 0.4, 0.2] 
+          }}
+          transition={{ duration: 15, repeat: Infinity, delay: 2 }}
+          className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-indigo-600/10 blur-[100px] rounded-full"
+        />
       </div>
 
-      {/* Headline */}
-      <h2 className="text-3xl font-bold text-white mb-3">
-        Build Your Personalized Learning Path
-      </h2>
-
-      {/* Description */}
-      <p className="text-gray-400 max-w-md leading-relaxed mb-10">
-        Tell SkillOrbit what you want to achieve — our AI creates a structured,
-        week-by-week roadmap tailored to your goals, learning style, and pace.
-      </p>
-
-      {/* Primary CTA */}
-      <Link to="/dashboard/create-roadmap" className="w-full max-w-sm">
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold
-      bg-gradient-to-r from-violet-600 to-purple-600
-      hover:from-violet-500 hover:to-purple-500
-      shadow-lg shadow-violet-600/20 transition-all"
-        >
-          <Sparkles size={16} />
-          Generate Your First Roadmap
-          <ArrowRight size={15} />
-        </motion.button>
-      </Link>
-
-      {/* Secondary Action */}
       <motion.div
-        whileHover={{ y: -3 }}
-        className="mt-8 bg-violet-500/5 border border-violet-500/20 rounded-2xl p-6 max-w-sm"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full max-w-6xl"
       >
-        <div className="flex gap-4 text-left">
-          <div className="bg-violet-500/20 p-2 rounded-lg">
-            <HelpCircle size={20} className="text-violet-400" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* Main Hero Card */}
+          <div className="lg:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-gray-900/40 backdrop-blur-xl border border-white/10 p-10 lg:p-14">
+            {/* Animated Border Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <div className="relative z-10">
+              <motion.div
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-medium mb-8"
+              >
+                <Sparkles size={14} className="animate-pulse" />
+                Ready for your next chapter?
+              </motion.div>
+
+              <h2 className="text-4xl lg:text-5xl font-bold text-white leading-[1.1] tracking-tight mb-6">
+                Your future isn't <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">calculated</span>. <br />
+                It's choreographed.
+              </h2>
+
+              <p className="text-gray-400 text-lg max-w-lg mb-10 leading-relaxed">
+                Move beyond static courses. Get a living, breathing learning roadmap 
+                that evolves with your progress and adapts to your rhythm.
+              </p>
+
+              <Link to="/dashboard/create-roadmap">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group/btn relative flex items-center gap-3 px-8 py-4 bg-white text-gray-950 rounded-2xl font-bold transition-all hover:bg-violet-50"
+                >
+                  Create Your Path
+                  <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                </motion.button>
+              </Link>
+            </div>
+
+            {/* Decorative Floating Icon */}
+            <motion.div 
+              animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-10 right-10 hidden lg:block opacity-20 group-hover:opacity-40 transition-opacity"
+            >
+              <Orbit size={180} className="text-violet-400" strokeWidth={1} />
+            </motion.div>
           </div>
 
-          <div>
-            <h4 className="text-white font-semibold text-sm mb-1">
-              Not sure what to learn?
-            </h4>
+          {/* Side Info Cards */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            
+            {/* Discovery Card */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="flex-1 rounded-[2rem] bg-white/5 border border-white/10 p-8 flex flex-col justify-between group cursor-pointer"
+            >
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                  <Compass size={24} />
+                </div>
+                <h3 className="text-xl font-semibold text-white">Lost in Choice?</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  Let our AI analyze your DNA—your interests and skills—to suggest your ideal career path.
+                </p>
+              </div>
+              <Link to="/dashboard/discovery" className="mt-6 flex items-center gap-2 text-indigo-400 text-sm font-bold group-hover:gap-3 transition-all">
+                Explore Careers <ArrowRight size={14} />
+              </Link>
+            </motion.div>
 
-            <p className="text-gray-400 text-xs mb-3">
-              Our AI analyzes your interests, thinking style, and goals to
-              suggest the perfect career path.
-            </p>
+            {/* Micro Stats Card */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-[1.5rem] bg-violet-500/10 border border-violet-500/20 p-5">
+                <Zap size={20} className="text-violet-400 mb-2" />
+                <div className="text-white font-bold">2min</div>
+                <div className="text-[10px] uppercase tracking-wider text-gray-500">Setup</div>
+              </div>
+              <div className="rounded-[1.5rem] bg-fuchsia-500/10 border border-fuchsia-500/20 p-5">
+                <Lightbulb size={20} className="text-fuchsia-400 mb-2" />
+                <div className="text-white font-bold">Smart</div>
+                <div className="text-[10px] uppercase tracking-wider text-gray-500">Adaptive</div>
+              </div>
+            </div>
 
-            <Link to="/dashboard/discovery">
-              <motion.button
-                whileHover={{ x: 4 }}
-                className="text-violet-400 text-xs font-bold flex items-center gap-1"
-              >
-                Start Career Discovery
-                <Compass size={14} />
-              </motion.button>
-            </Link>
           </div>
         </div>
       </motion.div>
-
-      {/* Trust Indicators */}
-      <div className="flex gap-6 mt-10 text-xs text-gray-500">
-        <span>⚡ 30 sec setup</span>
-        <span>🧠 AI-Personalized</span>
-        <span>🎯 Goal-Focused</span>
-      </div>
-    </motion.div>
+    </div>
   );
 };
 

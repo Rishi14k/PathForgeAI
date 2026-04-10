@@ -3,6 +3,7 @@ import React from 'react';
 import { set, useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 
 const popularTopics = [
@@ -42,6 +43,18 @@ const StepOne = ({formData, updateFormData,onNext}) => {
   const selectedLevel = watch('skillLevel')
 
   const onSubmit = (data)=>{
+    if(!data.topic){
+      return toast.error("Your topic is required!")
+    }
+    if(!data.skillLevel){
+      return toast.error("Skill level is required!")
+    }
+    if(!data.weeklyHours){
+      return toast.error("Weekly hours is required!")
+    }
+    if(!data.durationWeeks){
+      return toast.error("Duration week is required!")
+    }
     updateFormData(data)
     onNext()
   }

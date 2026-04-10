@@ -44,3 +44,13 @@ export const disCoveryAnalyses = async(data)=>{
     const res = await apiClient.post('/ai/discovery/analyze',data)
     return res.data
 }
+
+export const getUsageStatus = async()=>{
+    const res = await apiClient.get('/ai/usage-status')
+    return res.data
+}
+
+export const getDiscoveryResult = async()=>{
+    const res = await apiClient.get('/ai/discovery/result')
+    return res.data
+}

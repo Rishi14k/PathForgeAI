@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { toast } from "react-toastify";
 const learningStyles = [
   {
     id: "style-visual",
@@ -53,7 +54,7 @@ const resourceTypes = [
 ];
 
 const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
-  4;
+  
 
   const { handleSubmit } = useForm();
 
@@ -74,6 +75,13 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
   };
 
   const onSubmit = () => {
+    if(!learningStyles){
+      return toast.error("Select one learning style!")
+    }
+    if(!resourceTypes){
+      return toast.error("Select one resource type!")
+    }
+
     onNext();
   };
   return (
@@ -246,12 +254,12 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
                 desc: "Hands-on projects at the end of each week to reinforce learning",
                 value: formData.includeProjects,
               },
-              {
-                key: "includeQuizzes",
-                label: "Include knowledge checks",
-                desc: "Short quizzes after key topics to test your understanding",
-                value: formData.includeQuizzes,
-              },
+              // {
+              //   key: "includeQuizzes",
+              //   label: "Include knowledge checks",
+              //   desc: "Short quizzes after key topics to test your understanding",
+              //   value: formData.includeQuizzes,
+              // },
             ].map((toggle) => (
               <div
                 key={`toggle-${toggle.key}`}

@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProgressThunk } from "../../redux/features/dashboard/progressSlice";
 import { achievementMeta } from "./achivementMeta";
 import ProgressLoading from "./ProgressLoading";
+import GhostOverlay from "./GhostOverlay";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -83,6 +84,14 @@ const ProgressContent = () => {
     }
   }, [dispatch]);
 
+  const isGhostMode =
+  !stats ||
+  Object.keys(stats).length === 0 &&
+  weeklyActivity.length === 0 &&
+  monthlyProgress.length === 0 &&
+  roadmapProgress.length === 0 &&
+  achievements.length === 0;
+
   if (loading) {
     return <ProgressLoading />;
   }
@@ -119,7 +128,7 @@ const ProgressContent = () => {
     },
     {
       label: "Current Streak",
-      value: `${streak} days`, // backend not sending yet
+      value: `${streak || 0} days`, // backend not sending yet
       icon: Flame,
       color: "#F59E0B",
       change: `Longest streak: ${longestStreak}`,
@@ -134,11 +143,14 @@ const ProgressContent = () => {
   ];
 
   return (
-    <motion.div
+    <div>
+      
+      {isGhostMode && <GhostOverlay/>}
+      <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-8"
+      className={isGhostMode ? "pointer-events-none blur-[2px] opacity-60 space-y-8" : "space-y-8"}
     >
       {/* Page header */}
       <motion.div variants={itemVariants}>
@@ -426,6 +438,7 @@ const ProgressContent = () => {
         </div>
       </motion.div>
     </motion.div>
+    </div>
   );
 };
 
