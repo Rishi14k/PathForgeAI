@@ -13,9 +13,8 @@ const PORT = process.env.PORT || 5000
 connectDB()
 app.use(express.json())
 app.use(cors({
-     origin: 'http://localhost:5173',
+     origin: 'http://localhost:5173 || https://skillorbit-7ylj.onrender.com',
      credentials: true,
-
 }))
 
 app.use('/api/ai', roadmapRoute)
