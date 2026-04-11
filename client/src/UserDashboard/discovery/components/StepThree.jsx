@@ -41,7 +41,7 @@ const StepThree = ({ formData, onComplete }) => {
   const { status } = useSelector((state) => state.discovery);
   const navigate = useNavigate();
 
-  console.log("status", status);
+  // console.log("status", status);
 
   const [completedSteps, setCompletedSteps] = useState([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);

@@ -26,7 +26,7 @@ const DiscoveryContent = () => {
   const usageStatus = useSelector((s) => s.usage.status);
   // console.log("usage stst",usageStatus)
 
-  console.log("red", results);
+  // console.log("red", results);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);

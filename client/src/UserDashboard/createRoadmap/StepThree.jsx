@@ -46,7 +46,7 @@ const StepThree = ({ formData }) => {
     (state) => state.createRoadmap,
   );
 
-  console.log("stat",status )
+  // console.log("stat",status )
 
   const [completedSteps, setCompletedSteps] = useState([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);

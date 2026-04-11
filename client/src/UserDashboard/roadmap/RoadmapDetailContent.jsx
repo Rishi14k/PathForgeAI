@@ -50,7 +50,7 @@ const RoadmapDetailContent = () => {
 
   const dispatch = useDispatch();
   const { roadmapId } = useParams();
-  console.log("rd id", roadmapId);
+  // console.log("rd id", roadmapId);
 
   const { roadmap, weeks, progress, loading } = useSelector(
     (state) => state.singleRoadmap,

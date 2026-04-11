@@ -1,9 +1,18 @@
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import apiClient from "../apis/apiClient";
+import { loadRazorpay } from "./loadRazorpay";
 
 export const startPayment = async (token) => {
   try {
+
+    const isLoaded = await loadRazorpay();
+
+    if (!isLoaded) {
+      toast.error("Razorpay SDK failed to load");
+      return;
+    }
+
     // 1️⃣ Create order
     const { data: order } = await apiClient.post(
       "/payment/create-order",

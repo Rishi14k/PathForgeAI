@@ -35,7 +35,7 @@ const HeroSection = () => {
         />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 z-10">
+      <div className="relative mx-auto max-w-7xl px-6 z-10 mt-20">
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -43,10 +43,10 @@ const HeroSection = () => {
           className="mx-auto max-w-4xl text-center"
         >
           {/* Badge */}
-          <motion.div variants={itemVariants} className="mt-4 mb-8 inline-flex items-center gap-2 rounded-full border border-[#9F67FF]/30 bg-[#9F67FF]/5 px-4 py-1.5 text-sm font-medium text-[#C4B5FD] backdrop-blur-md shadow-[0_0_20px_rgba(159,103,255,0.1)]">
+          {/* <motion.div variants={itemVariants} className="mt-4 mb-8 inline-flex items-center gap-2 rounded-full border border-[#9F67FF]/30 bg-[#9F67FF]/5 px-4 py-1.5 text-sm font-medium text-[#C4B5FD] backdrop-blur-md shadow-[0_0_20px_rgba(159,103,255,0.1)]">
             <Sparkles className="h-4 w-4 text-[#9F67FF]" />
             <span className="tracking-wide uppercase text-[10px]">The Future of Personal Growth</span>
-          </motion.div>
+          </motion.div> */}
 
           {/* Heading */}
           <motion.h1 variants={itemVariants} className="text-balance text-5xl font-black tracking-tight text-white md:text-7xl lg:text-8xl">

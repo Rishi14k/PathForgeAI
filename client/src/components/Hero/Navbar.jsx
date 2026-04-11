@@ -41,15 +41,20 @@ const Navbar = () => {
         
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <motion.div 
+          {/* <motion.div 
             whileHover={{ rotate: 180 }}
             transition={{ duration: 0.6, ease: "anticipate" }}
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#9F67FF] to-[#7C3AED] shadow-lg shadow-[#9F67FF]/20"
           >
             <Compass className="h-6 w-6 text-white" />
-          </motion.div>
+          </motion.div> */}
           <span className="text-xl font-black tracking-tighter text-white">
-            SkillOrbit
+             <img
+                  src="./orbitLogo.png"
+                  alt="skillOrbit"
+                  width="200px"
+                  height="200px"
+                />
           </span>
         </Link>
 

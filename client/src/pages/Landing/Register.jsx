@@ -173,7 +173,10 @@ const Register = () => {
                 <div className="flex justify-center">
                   <div className="scale-110">
                     <GoogleLogin
-                      onSuccess={(res) => dispatch(googleLoginThunk(res.credential))}
+                      onSuccess={(res) => {
+                        dispatch(googleLoginThunk(res.credential))
+                        navigate("/dashboard")
+                      }}
                       onError={() => console.log("Google Login Failed")}
                       theme="filled_black"
                       shape="circle"

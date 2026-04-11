@@ -24,7 +24,7 @@ const navItems = [
     icon: LayoutDashboard,
     href: "/dashboard",
   },
-    {
+  {
     key: "nav-discovery",
     label: "Discovery",
     icon: TextSearch,
@@ -55,12 +55,11 @@ const navItems = [
     href: "/dashboard/profile",
   },
   {
-    key:"nav-pricing",
-    label:"Pricing",
-    icon:BadgeIndianRupee,
-    href:'/dashboard/pricing'
+    key: "nav-pricing",
+    label: "Pricing",
+    icon: BadgeIndianRupee,
+    href: "/dashboard/pricing",
   },
- 
 ];
 
 const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
@@ -68,11 +67,10 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
   const pathname = location.pathname;
 
   const sidebarWidth = collapsed ? "80px" : "260px";
-  const dispatch = useDispatch()
-  const handleLogout = ()=>{
-    dispatch(logoutThunk())
-  }
-
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logoutThunk());
+  };
 
   return (
     <>
@@ -88,11 +86,20 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
         {/* logo  */}
 
         <div
-          className="flex items-center h-16 px-4 flex-shrink-0"
+          className="flex items-center h-16 flex-shrink-0"
           style={{ borderBottom: "1px solid rgba(45, 55, 72, 0.4)" }}
         >
           <div className="flex items-center gap-3 min-w-0">
-            {/* <div className="flex-shrink-0">SO</div> */}
+            <div className="">
+              {collapsed && (
+                <img
+                  src="orbitMobile.png"
+                  alt="skillOrbit"
+                  width="120px"
+                  height="120px"
+                />
+              )}
+            </div>
             {!collapsed && (
               <span
                 className="font-bold text-lg tracking-tight transition-all duration-200"
@@ -103,8 +110,13 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
                   backgroundClip: "text",
                 }}
               >
-                SkillOrbit
-                {/* <img src="" alt="" /> */}
+                {/* SkillOrbit */}
+                <img
+                  src="./orbitLogo.png"
+                  alt="skillOrbit"
+                  width="190px"
+                  height="190px"
+                />
               </span>
             )}
           </div>
@@ -215,7 +227,8 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
           style={{ borderBottom: "1px solid rgba(45, 55, 72, 0.4)" }}
         >
           <div className="flex items-center gap-3">
-            😁
+            <img src="./orbitLogo.png" alt="logo" />
+
             <span
               className="font-bold text-lg tracking-tight"
               style={{
@@ -225,7 +238,9 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
                 backgroundClip: "text",
               }}
             >
-              SkillOrbit
+              <img src="orbitMobile.png" alt="skillOrbit" />
+
+              {/* SkillOrbit */}
             </span>
           </div>
           <button
@@ -270,7 +285,11 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
             paddingTop: "12px",
           }}
         >
-          <div onClick={handleLogout} className="nav-item" style={{ color: "#EF4444" }}>
+          <div
+            onClick={handleLogout}
+            className="nav-item"
+            style={{ color: "#EF4444" }}
+          >
             <LogOut size={20} style={{ color: "#EF4444" }} />
             <span className="text-sm font-medium">Logout</span>
           </div>
