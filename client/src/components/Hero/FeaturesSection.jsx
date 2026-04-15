@@ -61,7 +61,7 @@ const FeaturesSection = () => {
             </h2>
           </div>
           <p className="max-w-md text-gray-400 text-lg leading-relaxed">
-            We combined neural networks with proven pedagogical frameworks to turn months of learning into weeks.
+            We combine smart AI with proven learning methods to help you learn faster — without feeling overwhelmed.
           </p>
         </div>
 

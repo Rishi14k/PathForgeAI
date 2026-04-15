@@ -46,12 +46,7 @@ const Login = () => {
       >
         {/* Logo */}
         <Link to="/" className="mb-10 flex flex-col items-center gap-4 group">
-          <motion.div 
-            whileHover={{ scale: 1.1, rotate: -5 }}
-            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#9F67FF] to-[#7C3AED] shadow-lg shadow-[#9F67FF]/20"
-          >
-            <Compass className="h-8 w-8 text-white" />
-          </motion.div>
+         
           <span className="text-2xl font-black tracking-tighter text-white">
             SkillOrbit
           </span>

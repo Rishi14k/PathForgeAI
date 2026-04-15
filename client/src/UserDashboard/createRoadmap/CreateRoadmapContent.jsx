@@ -13,7 +13,7 @@ export const defaultFormData = {
   topic: "",
   customTopic: "",
   skillLevel: "",
-  weeklyHours: "8",
+  weeklyHours: "4",
   durationWeeks: "6",
   learningStyle: [],
   resourceTypes: [],

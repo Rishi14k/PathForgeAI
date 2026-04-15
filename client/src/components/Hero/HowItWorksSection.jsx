@@ -44,7 +44,7 @@ const HowItWorksSection = () => {
             Three Steps to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9F67FF] to-[#C4B5FD]">Evolution</span>
           </motion.h2>
           <p className="mt-6 text-lg text-gray-400">
-            PathForge AI simplifies the complexity of learning into a streamlined, actionable experience.
+            SkillOrbit AI simplifies the complexity of learning into a streamlined, actionable experience.
           </p>
         </div>
 

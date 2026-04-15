@@ -1,8 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Play, Code, Database, Lock, Terminal } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Play,
+  Code,
+  Database,
+  Lock,
+  Terminal,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import RoadmapPreview from "./RoadmapPreview";
+import SkillOrbitCanvas from "../skillorbit/SkillOrbitCanvas";
+import SkillOrbitBackground from "./SkillOrbitBackground";
 
 const HeroSection = () => {
   const containerVariants = {
@@ -15,28 +25,22 @@ const HeroSection = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    },
   };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 pb-20 overflow-hidden bg-[#05060A]">
       {/* Dynamic Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,#3d2b7a_0%,transparent_50%)] opacity-40" />
-        {/* Animated Grid */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150"></div>
-        <div 
-          className="absolute inset-0" 
-          style={{ 
-            backgroundImage: `linear-gradient(to right, #1a1b23 1px, transparent 1px), linear-gradient(to bottom, #1a1b23 1px, transparent 1px)`,
-            backgroundSize: '40px 40px',
-            maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)'
-          }} 
-        />
-      </div>
+
+      <div className=""></div>
+    <SkillOrbitBackground/>
 
       <div className="relative mx-auto max-w-7xl px-6 z-10 mt-20">
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -49,7 +53,10 @@ const HeroSection = () => {
           </motion.div> */}
 
           {/* Heading */}
-          <motion.h1 variants={itemVariants} className="text-balance text-5xl font-black tracking-tight text-white md:text-7xl lg:text-8xl">
+          <motion.h1
+            variants={itemVariants}
+            className="text-balance text-5xl font-black tracking-tight text-white md:text-7xl lg:text-8xl"
+          >
             Master Any Skill. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9F67FF] via-[#C4B5FD] to-[#9F67FF] bg-[length:200%_auto] animate-gradient">
               Directed by AI.
@@ -57,16 +64,22 @@ const HeroSection = () => {
           </motion.h1>
 
           {/* Description */}
-          <motion.p variants={itemVariants} className="mx-auto mt-8 max-w-2xl text-lg text-gray-400 md:text-xl leading-relaxed">
-            Stop wandering through endless tutorials. SkillOrbit crafts a 
-            <span className="text-white"> hyper-personalized roadmap</span> that evolves 
-            with your speed and ambition.
+          <motion.p
+            variants={itemVariants}
+            className="mx-auto mt-8 max-w-2xl text-lg text-gray-400 md:text-xl leading-relaxed"
+          >
+            Stop wandering through endless tutorials. SkillOrbit crafts a
+            <span className="text-white"> hyper-personalized roadmap</span> that
+            evolves with your speed and ambition.
           </motion.p>
 
           {/* Buttons */}
-          <motion.div variants={itemVariants} className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
+          <motion.div
+            variants={itemVariants}
+            className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row"
+          >
             <Link to="/dashboard">
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="group relative flex items-center gap-2 rounded-2xl bg-[#9F67FF] px-8 py-4 text-sm font-bold text-white transition-all shadow-[0_0_30px_rgba(159,103,255,0.3)] hover:shadow-[#9F67FF]/50"
@@ -76,20 +89,20 @@ const HeroSection = () => {
               </motion.button>
             </Link>
 
-            <a href="#features">
-              <motion.button 
+            <Link to="/dashboard/create-roadmap">
+              <motion.button
                 whileHover={{ backgroundColor: "rgba(255,255,255,0.05)" }}
                 className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-8 py-4 text-sm font-bold text-white transition-all backdrop-blur-sm"
               >
                 <Play className="h-4 w-4 fill-current" />
                 See the Magic
               </motion.button>
-            </a>
+            </Link>
           </motion.div>
         </motion.div>
 
         {/* Floating Mockup Experience */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -97,8 +110,8 @@ const HeroSection = () => {
         >
           {/* Subtle Glow behind mockup */}
           <div className="absolute -inset-4 bg-gradient-to-r from-[#9F67FF]/20 to-indigo-500/20 blur-3xl opacity-50" />
-          
-        <RoadmapPreview/>
+
+          {/* <RoadmapPreview /> */}
         </motion.div>
       </div>
     </section>

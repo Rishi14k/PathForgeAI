@@ -90,7 +90,7 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
           style={{ borderBottom: "1px solid rgba(45, 55, 72, 0.4)" }}
         >
           <div className="flex items-center gap-3 min-w-0">
-            <div className="">
+            <Link to="/">
               {collapsed && (
                 <img
                   src="orbitMobile.png"
@@ -99,9 +99,9 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
                   height="120px"
                 />
               )}
-            </div>
+            </Link>
             {!collapsed && (
-              <span
+              <Link to="/"
                 className="font-bold text-lg tracking-tight transition-all duration-200"
                 style={{
                   background: "linear-gradient(135deg, #7C3AED, #9F67FF)",
@@ -117,7 +117,7 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
                   width="190px"
                   height="190px"
                 />
-              </span>
+              </Link>
             )}
           </div>
         </div>
@@ -227,6 +227,8 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
           style={{ borderBottom: "1px solid rgba(45, 55, 72, 0.4)" }}
         >
           <div className="flex items-center gap-3">
+
+            
             <img src="./orbitLogo.png" alt="logo" />
 
             <span
@@ -238,7 +240,9 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onMobileClose }) => {
                 backgroundClip: "text",
               }}
             >
+
               <img src="orbitMobile.png" alt="skillOrbit" />
+             
 
               {/* SkillOrbit */}
             </span>

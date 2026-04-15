@@ -1,15 +1,15 @@
-import React from 'react';
-import { Compass, Twitter, Github, Linkedin, Mail, Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { Compass, Twitter, Github, Linkedin, Mail, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     Product: [
-      { name: "Features", path: "/features" },
-      { name: "Pricing", path: "/pricing" },
+      { name: "Pricing", path: "/dashboard/pricing" },
       { name: "Roadmaps", path: "/dashboard" },
       { name: "Discovery", path: "/dashboard/discovery" },
     ],
@@ -22,8 +22,10 @@ const Footer = () => {
       { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
       { name: "GitHub", icon: Github, href: "https://github.com" },
       { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-    ]
+    ],
   };
+
+  const [mailData, setMailData] = useState("");
 
   return (
     <footer className="relative border-t border-white/5 bg-[#05060A] pt-20 pb-10 overflow-hidden">
@@ -32,7 +34,6 @@ const Footer = () => {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-8 mb-16">
-          
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-6 group">
@@ -44,10 +45,10 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-gray-500 max-w-xs">
-              Empowering the next generation of creators with AI-driven learning paths. 
-              Evolution isn't an option; it's a journey.
+              Empowering the next generation of creators with AI-driven learning
+              paths. Evolution isn't an option; it's a journey.
             </p>
-            
+
             {/* Social Icons */}
             <div className="mt-8 flex gap-4">
               {footerLinks.Social.map((social) => (
@@ -67,18 +68,23 @@ const Footer = () => {
           {/* Links Grid */}
           <div className="grid grid-cols-2 gap-8 lg:col-span-2 lg:ml-auto">
             <div>
-              <h4 className="text-sm font-bold uppercase tracking-widest text-white mb-6">Product</h4>
+              <h4 className="text-sm font-bold uppercase tracking-widest text-white mb-6">
+                Product
+              </h4>
               <ul className="space-y-4">
                 {footerLinks.Product.map((link) => (
                   <li key={link.name}>
-                    <Link to={link.path} className="text-sm text-gray-500 hover:text-white transition-colors">
+                    <Link
+                      to={link.path}
+                      className="text-sm text-gray-500 hover:text-white transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-            <div>
+            {/* <div>
               <h4 className="text-sm font-bold uppercase tracking-widest text-white mb-6">Company</h4>
               <ul className="space-y-4">
                 {footerLinks.Company.map((link) => (
@@ -89,20 +95,34 @@ const Footer = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
           </div>
 
           {/* Newsletter / Contact */}
           <div className="lg:col-span-1">
-            <h4 className="text-sm font-bold uppercase tracking-widest text-white mb-6">Newsletter</h4>
-            <p className="text-sm text-gray-500 mb-4">Stay updated with new features and AI trends.</p>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-white mb-6">
+              Newsletter
+            </h4>
+            <p className="text-sm text-gray-500 mb-4">
+              Stay updated with new features and AI trends.
+            </p>
             <div className="relative">
-              <input 
-                type="email" 
-                placeholder="Enter email" 
+              <input
+                value={mailData}
+                onChange={(e)=>{
+                  setMailData(e.target.value)
+                }}
+                type="email"
+                placeholder="Enter email"
                 className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:border-[#9F67FF] focus:outline-none transition-all"
               />
-              <button className="absolute right-2 top-2 p-1.5 rounded-lg bg-[#9F67FF] text-white hover:bg-[#8B5CF6] transition-colors">
+              <button
+                onClick={() => {
+                  toast.success("We got you!!");
+                  setMailData("");
+                }}
+                className="absolute right-2 top-2 p-1.5 rounded-lg bg-[#9F67FF] text-white hover:bg-[#8B5CF6] transition-colors"
+              >
                 <Mail size={16} />
               </button>
             </div>
@@ -114,7 +134,7 @@ const Footer = () => {
           <p className="text-xs text-gray-600 font-medium">
             &copy; {currentYear} SkillOrbit. Designed for the curious.
           </p>
-          
+
           <div className="flex items-center gap-1 text-xs text-gray-600">
             <span>Made with</span>
             <motion.div

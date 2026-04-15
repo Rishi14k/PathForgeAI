@@ -1,7 +1,21 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Code2,
+  FileText,
+  Github,
+  Library,
+  ListChecks,
+  MonitorPlay,
+  PenTool,
+  Sparkles,
+  Terminal,
+  Youtube,
+} from "lucide-react";
 import { toast } from "react-toastify";
 const learningStyles = [
   {
@@ -9,28 +23,28 @@ const learningStyles = [
     value: "visual",
     label: "Visual",
     desc: "Diagrams, videos, illustrations",
-    icon: "👁️",
+    icon: <MonitorPlay size={24} />,
   },
   {
     id: "style-reading",
     value: "reading",
     label: "Reading",
     desc: "Articles, docs, books",
-    icon: "📖",
+    icon: <BookOpen size={24} />,
   },
   {
     id: "style-handson",
     value: "hands-on",
     label: "Hands-on",
     desc: "Projects, coding exercises",
-    icon: "🛠️",
+    icon: <Code2 size={24} />,
   },
   {
     id: "style-structured",
     value: "structured",
     label: "Structured",
-    desc: "Courses with clear progression",
-    icon: "📋",
+    desc: "Courses with progression",
+    icon: <ListChecks size={24} />,
   },
 ];
 
@@ -39,23 +53,41 @@ const resourceTypes = [
     id: "res-docs",
     value: "documentation",
     label: "Official Docs",
-    icon: "📄",
+    icon: <FileText size={18} />,
   },
-  { id: "res-video", value: "video", label: "Video Courses", icon: "🎬" },
-  { id: "res-blog", value: "blog", label: "Blog Posts", icon: "✍️" },
-  { id: "res-github", value: "github", label: "GitHub Repos", icon: "🐙" },
+  {
+    id: "res-video",
+    value: "video",
+    label: "Video Courses",
+    icon: <Youtube size={18} />,
+  },
+  {
+    id: "res-blog",
+    value: "blog",
+    label: "Blog Posts",
+    icon: <PenTool size={18} />,
+  },
+  {
+    id: "res-github",
+    value: "github",
+    label: "GitHub Repos",
+    icon: <Github size={18} />,
+  },
   {
     id: "res-interactive",
     value: "interactive",
-    label: "Interactive (Codecademy, etc.)",
-    icon: "💻",
+    label: "Interactive",
+    icon: <Terminal size={18} />,
   },
-  { id: "res-books", value: "books", label: "Books / PDFs", icon: "📚" },
+  {
+    id: "res-books",
+    value: "books",
+    label: "Books / PDFs",
+    icon: <Library size={18} />,
+  },
 ];
 
 const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
-  
-
   const { handleSubmit } = useForm();
 
   const toggleLearningStyle = (value) => {
@@ -75,11 +107,11 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
   };
 
   const onSubmit = () => {
-    if(!learningStyles){
-      return toast.error("Select one learning style!")
+    if (!learningStyles) {
+      return toast.error("Select one learning style!");
     }
-    if(!resourceTypes){
-      return toast.error("Select one resource type!")
+    if (!resourceTypes) {
+      return toast.error("Select one resource type!");
     }
 
     onNext();
@@ -107,46 +139,57 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {learningStyles.map((style) => {
               const isSelected = formData.learningStyle.includes(style.value);
+
               return (
                 <motion.button
                   key={style.id}
                   type="button"
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => toggleLearningStyle(style.value)}
-                  className="flex flex-col items-center gap-2 px-4 py-4 rounded-xl transition-all duration-200"
+                  className="group relative flex flex-col items-center gap-3 px-4 py-6 rounded-2xl transition-all duration-300 border border-transparent hover:border-violet-500/40"
                   style={{
                     background: isSelected
-                      ? "rgba(124, 58, 237, 0.15)"
-                      : "rgba(45, 55, 72, 0.3)",
+                      ? "rgba(124, 58, 237, 0.12)"
+                      : "rgba(45, 55, 72, 0.25)",
                     border: isSelected
                       ? "1px solid rgba(124, 58, 237, 0.5)"
-                      : "1px solid rgba(45, 55, 72, 0.5)",
+                      : undefined,
                     boxShadow: isSelected
-                      ? "0 0 12px rgba(124, 58, 237, 0.15)"
+                      ? "0 0 20px rgba(124, 58, 237, 0.1)"
                       : "none",
                   }}
                 >
-                  <span className="text-2xl">{style.icon}</span>
-                  <span
-                    className="text-sm font-semibold"
-                    style={{ color: isSelected ? "#F9FAFB" : "#9CA3AF" }}
+                  {/* Icon Container */}
+                  <div
+                    className={`transition-all duration-300 group-hover:scale-110 ${isSelected ? "text-violet-400" : "text-gray-400 group-hover:text-white"}`}
                   >
-                    {style.label}
-                  </span>
-                  <span
-                    className="text-xs text-center"
-                    style={{ color: "#6B7280" }}
-                  >
-                    {style.desc}
-                  </span>
+                    {style.icon}
+                  </div>
+
+                  {/* Text Group */}
+                  <div className="flex flex-col items-center gap-1">
+                    <span
+                      className={`text-sm font-bold transition-all duration-300 
+              ${
+                isSelected
+                  ? "text-white"
+                  : "text-gray-400 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-400 group-hover:to-fuchsia-400"
+              }`}
+                    >
+                      {style.label}
+                    </span>
+                    <span className="text-[10px] text-center leading-tight text-gray-500 font-medium opacity-80 group-hover:opacity-100">
+                      {style.desc}
+                    </span>
+                  </div>
+
+                  {/* Selected Checkmark (Simplified) */}
                   {isSelected && (
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center"
-                      style={{
-                        background: "rgba(124, 58, 237, 0.3)",
-                        border: "1px solid rgba(124, 58, 237, 0.5)",
-                      }}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center bg-violet-500 shadow-lg shadow-violet-500/40"
                     >
                       <svg
                         width="10"
@@ -156,13 +199,13 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
                       >
                         <path
                           d="M2 5l2 2 4-4"
-                          stroke="#9F67FF"
-                          strokeWidth="1.5"
+                          stroke="white"
+                          strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                       </svg>
-                    </div>
+                    </motion.div>
                   )}
                 </motion.button>
               );
@@ -185,52 +228,60 @@ const StepTwo = ({ formData, updateFormData, onNext, onPrev }) => {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {resourceTypes.map((res) => {
               const isSelected = formData.resourceTypes.includes(res.value);
+
               return (
                 <motion.button
                   key={res.id}
                   type="button"
-                  whileHover={{ scale: 1.01 }}
+                  whileHover={{ scale: 1.02, x: 2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => toggleResourceType(res.value)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200"
+                  className="group flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-300 border border-transparent hover:border-violet-500/40"
                   style={{
                     background: isSelected
                       ? "rgba(124, 58, 237, 0.12)"
                       : "rgba(45, 55, 72, 0.3)",
                     border: isSelected
                       ? "1px solid rgba(124, 58, 237, 0.4)"
-                      : "1px solid rgba(45, 55, 72, 0.5)",
+                      : undefined,
                   }}
                 >
-                  <span className="text-xl flex-shrink-0">{res.icon}</span>
+                  {/* Icon with scaling effect */}
                   <span
-                    className="text-sm font-medium"
-                    style={{ color: isSelected ? "#F9FAFB" : "#9CA3AF" }}
+                    className={`flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${isSelected ? "text-violet-400" : "text-gray-400 group-hover:text-white"}`}
+                  >
+                    {res.icon}
+                  </span>
+
+                  {/* Label with hover gradient */}
+                  <span
+                    className={`text-sm font-medium transition-all duration-300 truncate
+            ${
+              isSelected
+                ? "text-white"
+                : "text-gray-400 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-400 group-hover:to-fuchsia-400"
+            }`}
                   >
                     {res.label}
                   </span>
+
+                  {/* Selection Indicator */}
                   {isSelected && (
-                    <div className="ml-auto flex-shrink-0">
-                      <div
-                        className="w-4 h-4 rounded-full flex items-center justify-center"
-                        style={{ background: "#7C3AED" }}
-                      >
-                        <svg
-                          width="8"
-                          height="8"
-                          viewBox="0 0 10 10"
-                          fill="none"
-                        >
-                          <path
-                            d="M2 5l2 2 4-4"
-                            stroke="white"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-                    </div>
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="ml-auto flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center bg-violet-500 shadow-[0_0_10px_rgba(124,58,237,0.4)]"
+                    >
+                      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                        <path
+                          d="M2 5l2 2 4-4"
+                          stroke="white"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </motion.div>
                   )}
                 </motion.button>
               );

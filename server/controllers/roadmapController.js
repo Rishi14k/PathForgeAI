@@ -59,13 +59,13 @@ const generateRoadmap = async (req, res) => {
     //   });
     // }
 
-      if (!canGenerateRoadmap(user)) {
-    return res.status(403).json({
-      success: false,
-      code: "PAYMENT_REQUIRED",
-      message: "Upgrade to generate more roadmaps",
-    });
-  }
+    if (!canGenerateRoadmap(user)) {
+      return res.status(403).json({
+        success: false,
+        code: "PAYMENT_REQUIRED",
+        message: "Upgrade to generate more roadmaps",
+      });
+    }
 
     const allowedLearningStyles = [
       "visual",
@@ -313,8 +313,23 @@ const toggleTaskCompletion = async (req, res) => {
 
     if (task.isCompleted) {
       const user = await User.findById(userId);
-      updateStreak(user);
-      await user.save();  
+
+      const today = new Date();
+      const todayMidnight = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+      );
+
+      const lastActivity = user.streak.lastActivityDate;
+
+      if (
+        !lastActivity ||
+        new Date(lastActivity).setHours(0, 0, 0, 0) !== todayMidnight.getTime()
+      ) {
+        updateStreak(user);
+        await user.save();
+      }
     }
 
     res.status(200).json({
@@ -409,7 +424,8 @@ const getWeekProgress = async (req, res) => {
     const tasks = await RoadmapTask.find({ weekId: week._id });
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter((task) => task.isCompleted).length || 0;
-    const progressPercent = Math.round((completedTasks / totalTasks) * 100) || 0;
+    const progressPercent =
+      Math.round((completedTasks / totalTasks) * 100) || 0;
 
     res.status(200).json({
       success: true,
@@ -559,7 +575,7 @@ const getUserProgress = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const user = await User.findById(userId)
+    const user = await User.findById(userId);
 
     const progressDocs = await RoadmapProgress.find({ userId }).populate(
       "roadmapId",
@@ -643,7 +659,7 @@ const getUserProgress = async (req, res) => {
       totalTasksDone,
       roadmapsActive,
       hoursLearned,
-      streakDays:user?.streak?.currentStreak,
+      streakDays: user?.streak?.currentStreak,
     });
 
     res.json({
@@ -656,14 +672,13 @@ const getUserProgress = async (req, res) => {
       monthlyProgress,
       roadmapProgress,
       achievements,
-      streak:user?.streak?.currentStreak,
-      longestStreak:user?.streak?.longestStreak
+      streak: user?.streak?.currentStreak,
+      longestStreak: user?.streak?.longestStreak,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 const getUsageStatus = async (req, res) => {
   try {
@@ -671,7 +686,7 @@ const getUsageStatus = async (req, res) => {
 
     // Fetch only the necessary fields for better performance
     const user = await User.findById(userId).select(
-      "planType roadmapGenerated discoveryGenerated"
+      "planType roadmapGenerated discoveryGenerated",
     );
 
     if (!user) {

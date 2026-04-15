@@ -58,7 +58,7 @@ const PricingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen text-white selection:bg-violet-500/30 overflow-hidden">
+    <div id="pricing" className="min-h-screen text-white selection:bg-violet-500/30 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-violet-600/10 to-transparent blur-[120px] pointer-events-none" />
 

@@ -1,16 +1,35 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Plus } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Plus,
+  Palette,
+  Puzzle,
+  Cpu,
+  Globe,
+  BarChart3,
+  Gamepad2,
+  Hammer,
+  BookOpenCheck,
+  SearchCode,
+  Users2,
+  BugPlay,
+  Eye,
+  FileText,
+  Ear,
+  Zap,
+} from "lucide-react";
 import { toast } from "react-toastify";
 
 const predefinedInterests = [
-  { id: "int-design", label: "Designing", icon: "🎨" },
-  { id: "int-solve", label: "Problem Solving", icon: "🧩" },
-  { id: "int-ai", label: "AI & Technology", icon: "🤖" },
-  { id: "int-web", label: "Building Websites", icon: "🌐" },
-  { id: "int-data", label: "Data Analysis", icon: "📊" },
-  { id: "int-games", label: "Games", icon: "🎮" },
+  { id: "int-design", label: "Designing", icon: <Palette size={20} /> },
+  { id: "int-solve", label: "Problem Solving", icon: <Puzzle size={20} /> },
+  { id: "int-ai", label: "AI & Technology", icon: <Cpu size={20} /> },
+  { id: "int-web", label: "Building Websites", icon: <Globe size={20} /> },
+  { id: "int-data", label: "Data Analysis", icon: <BarChart3 size={20} /> },
+  { id: "int-games", label: "Games", icon: <Gamepad2 size={20} /> },
 ];
 
 const experienceLevels = [
@@ -25,18 +44,26 @@ const experienceLevels = [
 ];
 
 const predefinedActivities = [
-  { id: "act-build", label: "Building Projects", icon: "🛠️" },
-  { id: "act-learn", label: "Learning New Skills", icon: "📚" },
-  { id: "act-research", label: "Researching Ideas", icon: "🔎" },
-  { id: "act-team", label: "Team Collaboration", icon: "🤝" },
-  { id: "act-debug", label: "Debugging Problems", icon: "🐛" },
+  { id: "act-build", label: "Building Projects", icon: <Hammer size={20} /> },
+  {
+    id: "act-learn",
+    label: "Learning New Skills",
+    icon: <BookOpenCheck size={20} />,
+  },
+  {
+    id: "act-research",
+    label: "Researching Ideas",
+    icon: <SearchCode size={20} />,
+  },
+  { id: "act-team", label: "Team Collaboration", icon: <Users2 size={20} /> },
+  { id: "act-debug", label: "Debugging Problems", icon: <BugPlay size={20} /> },
 ];
 
 const predefinedLearningStyles = [
-  { id: "ls-visual", label: "Visual", icon: "👀" },
-  { id: "ls-reading", label: "Reading/Writing", icon: "📖" },
-  { id: "ls-audio", label: "Listening", icon: "🎧" },
-  { id: "ls-hands", label: "Hands-on Practice", icon: "⚡" },
+  { id: "ls-visual", label: "Visual", icon: <Eye size={20} /> },
+  { id: "ls-reading", label: "Reading/Writing", icon: <FileText size={20} /> },
+  { id: "ls-audio", label: "Listening", icon: <Ear size={20} /> },
+  { id: "ls-hands", label: "Hands-on Practice", icon: <Zap size={20} /> },
 ];
 
 const StepOne = ({ formData, updateFormData, onNext }) => {
@@ -104,8 +131,8 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
     if (!data.interests?.length)
       return toast.error("Select at least one interest");
 
-    if(!data.activities?.length){
-      return toast.error("Select at least one activity")
+    if (!data.activities?.length) {
+      return toast.error("Select at least one activity");
     }
 
     if (!data.thinkingStyle) return toast.error("Select thinking style");
@@ -164,14 +191,23 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
                 type="button"
                 whileTap={{ scale: 0.97 }}
                 onClick={() => toggleInterest(item.label)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all"
+                // Added 'group' and hover border color
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:border-violet-500/50 border border-transparent"
                 style={cardStyle(selectedInterests.includes(item.label))}
               >
-                <span>{item.icon}</span>
-                <span className="truncate">{item.label}</span>
+                {/* Icon scales slightly on hover */}
+                <span className="transition-transform duration-300 group-hover:scale-110">
+                  {item.icon}
+                </span>
+
+                {/* Label with hover gradient */}
+                <span className="truncate transition-all duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-400 group-hover:to-fuchsia-400">
+                  {item.label}
+                </span>
               </motion.button>
             ))}
-            {/* Render Custom Tags */}
+
+            {/* Custom Tags Section */}
             {selectedInterests
               .filter((i) => !predefinedInterests.find((p) => p.label === i))
               .map((tag) => (
@@ -179,11 +215,16 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
                   key={tag}
                   type="button"
                   onClick={() => toggleInterest(tag)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all"
+                  // Consistent hover logic for custom tags
+                  className="group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:border-violet-500/50 border border-transparent"
                   style={cardStyle(true)}
                 >
-                  <span>✨</span>
-                  <span className="truncate">{tag}</span>
+                  <span className="transition-transform duration-300 group-hover:rotate-12">
+                    ✨
+                  </span>
+                  <span className="truncate transition-all duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-400 group-hover:to-fuchsia-400">
+                    {tag}
+                  </span>
                 </motion.button>
               ))}
           </div>
@@ -232,10 +273,18 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
                   )
                 }
                 style={cardStyle(selectedActivities.includes(item.label))}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+                // Added 'group', 'transition-all', and hover border reveal
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all border border-transparent hover:border-violet-500/40"
               >
-                <span>{item.icon}</span>
-                {item.label}
+                {/* Icon with scaling micro-interaction */}
+                <span className="transition-transform duration-300 group-hover:scale-110">
+                  {item.icon}
+                </span>
+
+                {/* Label with hover gradient effect */}
+                <span className="truncate transition-all duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-400 group-hover:to-fuchsia-400">
+                  {item.label}
+                </span>
               </motion.button>
             ))}
           </div>
@@ -371,16 +420,26 @@ const StepOne = ({ formData, updateFormData, onNext }) => {
                     )
                   }
                   style={cardStyle(selectedLearningStyles.includes(item.label))}
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm"
+                  // Added group and hover border reveal
+                  className="group flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-all border border-transparent hover:border-violet-500/40"
                 >
-                  <span>{item.icon}</span>
-                  {item.label}
+                  {/* Icon with scale effect */}
+                  <span className="transition-transform duration-300 group-hover:scale-110">
+                    {item.icon}
+                  </span>
+
+                  {/* Label with hover gradient */}
+                  <span className="truncate transition-all duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-400 group-hover:to-fuchsia-400">
+                    {item.label}
+                  </span>
                 </motion.button>
               ))}
             </div>
 
             {selectedLearningStyles
-              .filter((i) => !predefinedLearningStyles.find((p) => p.label === i))
+              .filter(
+                (i) => !predefinedLearningStyles.find((p) => p.label === i),
+              )
               .map((tag) => (
                 <motion.button
                   key={tag}

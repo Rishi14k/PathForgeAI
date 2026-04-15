@@ -6,12 +6,16 @@ import { dashboardStateThunk } from "../../../redux/features/dashboard/dashboard
 import GhostLock from "./GhostLock";
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  hidden: { opacity: 0, y: 16, scale: 0.98 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { delay: i * 0.08, duration: 0.45, ease: "easeOut" },
+    transition: {
+      delay: i * 0.02,
+      duration: 0.15,
+      ease: "easeOut",
+    },
   }),
 };
 
@@ -107,7 +111,7 @@ const StateCardUI = ({
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      whileHover={{ y: -3, scale: 1.01 }}
+      whileHover={{ y: -3, scale: 1.05 }}
       className="relative stat-card cursor-default overflow-hidden"
       style={{ boxShadow: `0 4px 24px ${color}40` }}
     >
