@@ -86,7 +86,7 @@ if (usageStatus === "loading" || !usage) {
           navigate('/dashboard')
         }}
         onUpgrade={() => {
-          navigate('/pricing')
+          navigate('/dashboard/pricing')
         }}
       />
       {/* Page header */}

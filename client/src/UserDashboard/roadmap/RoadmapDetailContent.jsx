@@ -25,6 +25,8 @@ import {
   toggleProjectThunk,
   toggleTaskThunk,
 } from "../../redux/features/dashboard/singleRoadmapSlice";
+import OrbitLauncher from "./OrbitLauncher";
+import { getUserIdFromToken } from "../../utils/auth";
 
 const taskTypeConfig = {
   video: { label: "Video", color: "#7C3AED", bg: "rgba(124, 58, 237, 0.12)" },
@@ -47,6 +49,7 @@ const taskTypeConfig = {
 
 const RoadmapDetailContent = () => {
   const [expandedWeeks, setExpandedWeeks] = useState([4]);
+  const userId = getUserIdFromToken();
 
   const dispatch = useDispatch();
   const { roadmapId } = useParams();
@@ -339,13 +342,20 @@ const RoadmapDetailContent = () => {
               >
                 {/* Week header */}
                 <button
-                  className="w-full flex items-center gap-4 p-4 lg:p-5 text-left"
+                  className="
+    w-full
+    flex flex-col sm:flex-row
+    sm:items-center
+    gap-3 sm:gap-4
+    p-3 sm:p-4 lg:p-5
+    text-left
+  "
                   onClick={() => isUnlocked && toggleWeek(week?._id)}
                   disabled={!isUnlocked}
                 >
                   {/* Week number */}
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-bold"
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-bold self-start sm:self-center"
                     style={{
                       background: isCompleted
                         ? "rgba(16, 185, 129, 0.15)"
@@ -368,7 +378,7 @@ const RoadmapDetailContent = () => {
                     )}
                   </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 w-full">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3
                         className="text-sm font-semibold truncate"
@@ -447,43 +457,63 @@ const RoadmapDetailContent = () => {
                         return (
                           <div
                             key={task?._id}
-                            className="flex items-center gap-3 p-3 rounded-xl transition-all"
+                            // UPDATED: Added 'flex-col sm:flex-row' and 'sm:items-center'
+                            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-xl transition-all cursor-pointer"
                             style={{
                               background: task?.isCompleted
                                 ? "rgba(16, 185, 129, 0.05)"
                                 : "rgba(45, 55, 72, 0.15)",
-                              border: `1px solid ${task?.isCompleted ? "rgba(16, 185, 129, 0.15)" : "rgba(45, 55, 72, 0.3)"}`,
+                              border: `1px solid ${
+                                task?.isCompleted
+                                  ? "rgba(16, 185, 129, 0.15)"
+                                  : "rgba(45, 55, 72, 0.3)"
+                              }`,
                             }}
                             onClick={() => dispatch(toggleTaskThunk(task?._id))}
                           >
-                            {task.isCompleted ? (
-                              <CheckCircle2
-                                size={16}
-                                style={{ color: "#10B981", flexShrink: 0 }}
-                              />
-                            ) : (
-                              <Circle
-                                size={16}
-                                style={{ color: "#4B5563", flexShrink: 0 }}
-                              />
-                            )}
-                            <span
-                              className="text-sm flex-1"
-                              style={{
-                                color: task.isCompleted ? "#9CA3AF" : "#F9FAFB",
-                                textDecoration: task.isCompleted
-                                  ? "line-through"
-                                  : "none",
-                              }}
-                            >
-                              {task?.taskTitle}
-                            </span>
+                            {/* Container for Icon + Title to keep them aligned on the same line even on mobile */}
+                            <div className="flex items-start gap-3 flex-1">
+                              {task.isCompleted ? (
+                                <CheckCircle2
+                                  size={16}
+                                  style={{
+                                    color: "#10B981",
+                                    flexShrink: 0,
+                                    marginTop: "2px",
+                                  }}
+                                />
+                              ) : (
+                                <Circle
+                                  size={16}
+                                  style={{
+                                    color: "#4B5563",
+                                    flexShrink: 0,
+                                    marginTop: "2px",
+                                  }}
+                                />
+                              )}
 
-                            <p className="text-xs mt-1 flex flex-wrap gap-1.5">
+                              <span
+                                className="text-sm font-medium"
+                                style={{
+                                  color: task.isCompleted
+                                    ? "#9CA3AF"
+                                    : "#F9FAFB",
+                                  textDecoration: task.isCompleted
+                                    ? "line-through"
+                                    : "none",
+                                }}
+                              >
+                                {task?.taskTitle}
+                              </span>
+                            </div>
+
+                            {/* UPDATED: Topic tags container */}
+                            <div className="flex flex-wrap gap-1.5 sm:ml-auto">
                               {week.topics.map((topic) => (
                                 <span
                                   key={topic}
-                                  className="px-2 py-0.5 rounded-md text-[11px]"
+                                  className="px-2 py-0.5 rounded-md text-[11px] whitespace-nowrap"
                                   style={{
                                     background: "rgba(124,58,237,0.12)",
                                     color: "#9F67FF",
@@ -493,22 +523,7 @@ const RoadmapDetailContent = () => {
                                   {topic}
                                 </span>
                               ))}
-                            </p>
-                            {/* <span
-                              className="text-xs px-2 py-0.5 rounded-md font-medium flex-shrink-0"
-                              style={{
-                                background: typeConf.bg,
-                                color: typeConf.color,
-                              }}
-                            >
-                              {typeConf.label}
-                            </span> */}
-                            {/* <span
-                              className="text-xs flex-shrink-0"
-                              style={{ color: "#6B7280" }}
-                            >
-                              {task.duration}
-                            </span> */}
+                            </div>
                           </div>
                         );
                       })}
@@ -555,6 +570,8 @@ const RoadmapDetailContent = () => {
               </motion.div>
             );
           })}
+
+          <OrbitLauncher userId={userId} roadmapId={roadmap?._id} />
         </div>
       </div>
     </div>

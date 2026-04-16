@@ -441,3 +441,28 @@
     -webkit-user-select: none;
   }
 }
+
+/* skeleton shimmer */
+.shimmer {
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.05) 40%,
+    transparent 55%
+  );
+  background-size: 200% 100%;
+  animation: shimmerMove 1.4s linear infinite;
+}
+
+@keyframes shimmerMove {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+button:hover{
+  cursor: pointer;
+}

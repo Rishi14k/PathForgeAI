@@ -11,6 +11,7 @@ const {
   toggleProjectCompletion,
   getUserProgress,
   getUsageStatus,
+  getAgentHistory,
 } = require("../controllers/roadmapController");
 const {analyzeDiscovery, getDiscoveryResult}  = require('../controllers/discoveryController')
 const authMiddleware = require("../middlewares/authMiddleware");
@@ -46,4 +47,5 @@ router.get('/discovery/result',authMiddleware,getDiscoveryResult)
 
 router.get('/usage-status',authMiddleware,getUsageStatus)
 
+router.get('/agent/history/:roadmapId',authMiddleware,getAgentHistory)
 module.exports = router;

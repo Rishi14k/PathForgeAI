@@ -4,10 +4,19 @@ import { Check, Crown, Sparkles, Zap, ShieldCheck, Infinity as InfinityIcon, Arr
 import { useSelector } from "react-redux";
 import { startPayment } from "../services/paymentService";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const PricingPage = () => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
+
+  const handleProtectedAction = (actionCallback)=>{
+     if(!token){
+      navigate('/login')
+      return
+    }
+    actionCallback()
+  }
 
   const plans = [
     {
@@ -19,7 +28,7 @@ const PricingPage = () => {
       button: "Get Started",
       highlight: false,
       color: "gray",
-      action: () => navigate("/dashboard"),
+      action: () => handleProtectedAction(() => navigate("/dashboard")),
     },
     {
       name: "Pro Learner",
@@ -36,7 +45,7 @@ const PricingPage = () => {
       button: "Upgrade to Pro",
       highlight: true,
       color: "violet",
-      action: () => startPayment(token),
+      action: () => handleProtectedAction(() => startPayment(token)),
     },
     {
       name: "Lifetime",
@@ -53,7 +62,7 @@ const PricingPage = () => {
       button: "Go Lifetime",
       highlight: false,
       color: "gold",
-      action: () => startPayment(token),
+      action: () => handleProtectedAction(() => startPayment(token)),
     },
   ];
 

@@ -15,7 +15,7 @@ const EmptyState = () => {
             opacity: [0.3, 0.2, 0.3] 
           }}
           transition={{ duration: 20, repeat: Infinity }}
-          className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-violet-600/20 blur-[120px] rounded-full"
+          className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full"
         />
         <motion.div 
           animate={{ 
@@ -31,7 +31,7 @@ const EmptyState = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-6xl"
+        className="relative z-10 w-full max-w-7xl"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           

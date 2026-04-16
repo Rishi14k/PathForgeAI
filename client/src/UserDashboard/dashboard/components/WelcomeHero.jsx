@@ -89,7 +89,7 @@ const WelcomeHero = () => {
             className="text-3xl lg:text-4xl font-bold leading-tight"
             style={{ color: "#F9FAFB" }}
           >
-            Welcome back to{" "}
+            Welcome to{" "}
             <span
               style={{
                 background:

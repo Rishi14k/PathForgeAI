@@ -24,8 +24,10 @@
     "google-auth-library": "^10.6.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.4",
+    "node-fetch": "^3.3.2",
     "nodemon": "^3.1.14",
     "openai": "^6.25.0",
-    "razorpay": "^2.9.6"
+    "razorpay": "^2.9.6",
+    "socket.io": "^4.8.3"
   }
 }

@@ -1,3 +1,4 @@
+const AgentConversation = require("../models/AgentConversation");
 const Discovery = require("../models/Discovery");
 const Roadmap = require("../models/Roadmap");
 const RoadmapProgress = require("../models/RoadmapProgress");
@@ -728,6 +729,25 @@ const getUsageStatus = async (req, res) => {
   }
 };
 
+const getAgentHistory = async(req,res)=>{
+  try {
+    const {roadmapId} = req.params
+    const userId  = req.user.userId
+
+    const convo = await AgentConversation.findOne({userId,roadmapId})
+
+    res.status(200).json({
+      data:convo?.messages || [],
+      success:true
+    })
+  } catch (error) {
+    res.status(500).json({
+      success:false,
+      message:"Internal server error"
+    })
+  }
+}
+
 module.exports = {
   generateRoadmap,
   getRoadmapById,
@@ -740,4 +760,5 @@ module.exports = {
   toggleProjectCompletion,
   getUserProgress,
   getUsageStatus,
+  getAgentHistory
 };

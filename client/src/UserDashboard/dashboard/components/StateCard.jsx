@@ -1,27 +1,34 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Flame, CheckCircle2, BarChart3, BookOpen } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { dashboardStateThunk } from "../../../redux/features/dashboard/dashboardStateSlice";
 import GhostLock from "./GhostLock";
+import StateCardSkeleton from "./StateCardSkeleton";
+
+/* ---------------- ANIMATION ---------------- */
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 16, scale: 0.98 },
+  hidden: { opacity: 0, y: 14, scale: 0.98 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      delay: i * 0.02,
-      duration: 0.15,
+      delay: i * 0.03,
+      duration: 0.25,
       ease: "easeOut",
     },
   }),
 };
 
+/* ---------------- MAIN COMPONENT ---------------- */
+
 const StateCard = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.dashboard.data?.data);
+
+  // ✅ Prevent re-render storms
+  const data = useSelector((state) => state.dashboard.data?.data, shallowEqual);
 
   useEffect(() => {
     dispatch(dashboardStateThunk());
@@ -30,23 +37,26 @@ const StateCard = () => {
   const isGhostMode =
     !data || data.roadmapGenerated === 0 || data.totalTask === 0;
 
-  if (!data) return <p className="text-white">Loading dashboard...</p>;
+  if (!data) return <StateCardSkeleton />;
 
   return (
     <div>
       <h3
-        className="text-sm font-semibold uppercase tracking-widest mb-4"
-        style={{ color: "#6B7280", letterSpacing: "0.08em" }}
+        className="text-sm font-semibold uppercase tracking-wide mb-4 will-change-transform"
+        style={{
+          color: "#6B7280",
+          transform: "translateZ(0)",
+        }}
       >
         Overview
       </h3>
 
+      {/* ---------- Wrapper ---------- */}
       <div className="relative">
-          {isGhostMode && <GhostLock />}
-
+        {/* ✅ GRID (NO BLUR ANYMORE) */}
         <div
-          className={`grid grid-cols-2 xl:grid-cols-4 gap-4 transition-all duration-300 ${
-            isGhostMode ? "blur-[2px] opacity-60 pointer-events-none" : ""
+          className={`grid grid-cols-2 xl:grid-cols-4 gap-4 transition-opacity duration-300 ${
+            isGhostMode ? "opacity-50 pointer-events-none" : ""
           }`}
         >
           <StateCardUI
@@ -57,6 +67,7 @@ const StateCard = () => {
             icon={Flame}
             color="#F59E0B"
             trend="Keep the fire alive 🔥"
+            isGhostMode={isGhostMode}
           />
 
           <StateCardUI
@@ -66,6 +77,7 @@ const StateCard = () => {
             icon={BookOpen}
             color="#7C3AED"
             trend={data.status}
+            isGhostMode={isGhostMode}
           />
 
           <StateCardUI
@@ -76,6 +88,7 @@ const StateCard = () => {
             icon={CheckCircle2}
             color="#10B981"
             trend={`${data.progressPercent}% completed`}
+            isGhostMode={isGhostMode}
           />
 
           <StateCardUI
@@ -86,14 +99,24 @@ const StateCard = () => {
             icon={BarChart3}
             color="#3B82F6"
             trend="Learning in orbit"
+            isGhostMode={isGhostMode}
           />
         </div>
+
+        {/* ✅ OVERLAY OUTSIDE FLOW */}
+        {isGhostMode && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center">
+            <GhostLock />
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default StateCard;
+
+/* ---------------- CARD UI ---------------- */
 
 const StateCardUI = ({
   index = 0,
@@ -104,6 +127,7 @@ const StateCardUI = ({
   color = "#3B82F6",
   trend,
   trendPositive = true,
+  isGhostMode,
 }) => {
   return (
     <motion.div
@@ -111,9 +135,13 @@ const StateCardUI = ({
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      whileHover={{ y: -3, scale: 1.05 }}
-      className="relative stat-card cursor-default overflow-hidden"
-      style={{ boxShadow: `0 4px 24px ${color}40` }}
+      // ✅ Disable hover animation for ghost mode
+      whileHover={!isGhostMode ? { y: -4, scale: 1.05 } : {}}
+      className="relative stat-card cursor-default overflow-hidden will-change-transform"
+      style={{
+        boxShadow: `0 6px 28px ${color}30`,
+        transform: "translateZ(0)", // GPU acceleration
+      }}
     >
       {/* Glow Background */}
       <div

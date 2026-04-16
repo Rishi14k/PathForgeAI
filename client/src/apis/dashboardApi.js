@@ -54,3 +54,10 @@ export const getDiscoveryResult = async()=>{
     const res = await apiClient.get('/ai/discovery/result')
     return res.data
 }
+export const fetchAgentHistory = async (roadmapId) => {
+  const { data } = await apiClient.get(
+    `/ai/agent/history/${roadmapId}`
+  );
+
+  return data.data || [];
+};
