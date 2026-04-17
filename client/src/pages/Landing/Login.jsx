@@ -25,7 +25,7 @@ const Login = () => {
     try {
       await dispatch(loginThunk({ email, password })).unwrap();
       navigate("/dashboard");
-      toast.success("Welcome back, Voyager!");
+      toast.success("Welcome back, Explorer!");
     } catch (error) {
       toast.error(error || "Invalid credentials");
     }

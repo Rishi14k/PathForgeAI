@@ -25,7 +25,7 @@ const Navbar = () => {
   const handleLogout = () => {
     try {
       dispatch(logoutThunk());
-      toast.success("See you soon, Voyager!");
+      toast.success("See you soon, Explorer!");
     } catch (error) {
       toast.error("Logout failed. Stay a bit longer?");
     }

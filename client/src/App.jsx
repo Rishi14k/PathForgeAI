@@ -18,6 +18,7 @@ import GlobalLoader from "./components/GlobalLoader";
 import DiscoveryContent from "./UserDashboard/discovery/DiscoveryContent";
 import DiscoveryResults from "./UserDashboard/discovery/components/DiscoveryResults";
 import PricingPage from "./pages/PricingPage";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const dispath = useDispatch();
@@ -62,7 +63,16 @@ const App = () => {
       </Routes>
 
       {/* <Footer /> */}
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="dark"
+      />
     </main>
   );
 };
