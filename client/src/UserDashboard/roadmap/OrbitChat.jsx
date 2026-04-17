@@ -5,7 +5,7 @@ import {
   listenAgentEvents,
   disconnectAgent,
 } from "../../services/orbitAgent";
-import AIMessage from "./AImessage";
+import AIMessage from "./AIMessage";
 import { fetchAgentHistory } from "../../apis/dashboardApi";
 
 function OrbitChat({ userId, roadmapId, onClose }) {
