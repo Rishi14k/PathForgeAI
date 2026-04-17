@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Compass, LayoutDashboard, LogOut, Menu, X, User } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutThunk } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,7 @@ const Navbar = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate()
 
   // Handle scroll effect for glassmorphism
   useEffect(() => {
@@ -26,6 +27,7 @@ const Navbar = () => {
     try {
       dispatch(logoutThunk());
       toast.success("See you soon, Explorer!");
+      navigate('/login')
     } catch (error) {
       toast.error("Logout failed. Stay a bit longer?");
     }
