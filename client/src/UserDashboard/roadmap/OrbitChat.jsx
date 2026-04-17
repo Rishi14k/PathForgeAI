@@ -140,7 +140,7 @@ function OrbitChat({ userId, roadmapId, onClose }) {
           onClick={onClose}
           className="text-gray-400 hover:text-white p-1"
         >
-          ✕
+          ✕ 
         </button>
       </div>
 
