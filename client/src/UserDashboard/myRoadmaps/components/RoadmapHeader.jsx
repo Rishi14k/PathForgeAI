@@ -19,7 +19,7 @@ const RoadmapHeader = ({totalCount}) => {
         </p>
         </div>
 
-          <Link to="/create-roadmap">
+          <Link to="/dashboard/create-roadmap">
         <motion.button
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.97 }}
