@@ -1,128 +1,125 @@
-# PathForge AI – Backend 🚀
+# Roadmap AI Platform
 
-PathForge AI is an intelligent learning roadmap generator that helps users create structured study plans for achieving their career goals. It uses AI to generate personalized weekly roadmaps, track progress, maintain learning streaks.
+A modern learning and career roadmap platform with AI-powered study plans, progress tracking, career discovery, and SaaS usage controls.
 
-This backend powers the entire platform including authentication, AI roadmap generation, task tracking, progress analytics, and SaaS-based roadmap limits.
+This repository contains a full-stack application with:
 
----
-
-## ✨ Features
-
-### 🔐 Authentication System
-
-* User Registration with Email & Password
-* OTP Email Verification
-* Secure Login
-* Google OAuth Login
-
-### 🤖 AI Roadmap Generation
-
-* Generate personalized learning roadmaps using **Google Gemini**
-* Structured weekly learning plans
-* Daily tasks and mini-projects
-* AI response stored for reference
-
-### 📚 Roadmap Management
-
-* Generate roadmap based on:
-
-  * Goal
-  * Skill Level
-  * Study Hours per Day
-  * Duration (Weeks)
-* Retrieve roadmap by ID
-* View all roadmaps created by the user
-
-### ✅ Task Tracking
-
-* Toggle task completion
-* Track daily learning progress
-* Automatic progress calculation
-
-### 📊 Progress System
-
-* Total tasks tracking
-* Completed tasks tracking
-* Progress percentage calculation
-
-### 🔥 Learning Streak
-
-* Tracks daily learning consistency
-* Maintains current learning streak
-
-### ⚡ Rate Limiting
-
-Roadmap generation is protected using **express-rate-limit** to prevent abuse.
-
-```
-5 roadmap requests per minute
-```
-
-### 💳 SaaS Plan Limits
-
-* Free Plan → 2 roadmaps per month
-* Paid Plan → 10 roadmaps per month
-* Monthly counter resets automatically
+- React frontend using Vite, Tailwind, Redux
+- Express backend with MongoDB, JWT auth, AI integration, and payments
+- AI roadmap generation and career discovery workflows
+- task tracking, progress analytics, streak monitoring, and usage limits
+- Razorpay payment flows and socket-enabled agent history
 
 ---
 
-## 🏗️ Tech Stack
+## 🚀 Core Features
 
-**Backend**
+### AI Roadmap Generation
 
-* Node.js
-* Express.js
+- Create personalized weekly learning roadmaps based on user goals
+- Support for skill level, daily study time, duration, learning styles, and resource preferences
+- Generates weekly topics, daily tasks, and project milestones
+- Stores raw AI response for audit and conversation history
 
-**Database**
+### Career Discovery
 
-* MongoDB
-* Mongoose
+- AI-powered discovery flow for career and interest profiling
+- Collects interests, motivations, learning style, and experience
+- Saves AI-suggested career options and returns the latest report
 
-**Authentication**
+### User Dashboard
 
-* JWT
-* BcryptJS
-* Google OAuth
+- View active roadmaps, saved roadmaps, and progress metrics
+- Access roadmap detail pages with week-by-week tasks
+- Toggle task completion and project completion
+- Monitor streaks, achievements, and learning activity
 
-**AI Integration**
+### Analytics & Progress
 
-* Google Gemini API
+- Track completed vs total tasks and overall progress percentage
+- Weekly progress metrics for each roadmap
+- Dashboard statistics for completed tasks, active roadmaps, and streaks
+- Achievement generation based on learning activity
 
-**Utilities**
+### Authentication & Account Management
 
-* Express Rate Limit
-* Brevo (for OTP emails)
+- Email/password registration and login
+- OTP verification with resend support
+- Google OAuth login
+- Protected dashboard routes for authenticated users
+
+### SaaS Usage Controls
+
+- Enforced roadmap/discovery generation limits by plan
+- Usage status endpoint for client-side plan info
+- Free/paid plan checks in backend access control logic
+
+### Payments & Agent Support
+
+- Razorpay order creation and verification endpoints
+- Socket.io integration for live agent and conversation support
+- Agent history retrieval by roadmap
 
 ---
 
-## 📂 Project Structure
+## 🧩 Tech Stack
+
+### Frontend
+
+- React 19
+- Vite
+- Tailwind CSS
+- Redux Toolkit
+- React Router DOM
+- React Flow
+- Recharts
+- Socket.io Client
+
+### Backend
+
+- Node.js
+- Express
+- MongoDB + Mongoose
+- JWT authentication
+- Google OAuth
+- Razorpay payment gateway
+- Express rate limiting
+
+### AI / Integrations
+
+- Google Gemini / Generative AI SDK
+- OpenRouter / OpenAI SDK
+- OTP email support
+
+---
+
+## 📁 Repository Structure
 
 ```
-server
-│
-├── controllers
-│   ├── authController.js
-│   ├── roadmapController.js
-│
-├── models
-│   ├── User.js
-│   ├── Roadmap.js
-│   ├── RoadmapWeek.js
-│   ├── RoadmapTask.js
-│   ├── RoadmapProgress.js
-│
-├── routes
-│   ├── authRoutes.js
-│   ├── roadmapRoutes.js
-│
-├── middleware
-│   ├── authMiddleware.js
-│   ├── roadmapLimiter.js
-│
-├── services
-│   ├── aiService.js
-│
-└── server.js
+.
+├── client
+│   ├── public
+│   ├── src
+│   │   ├── apis
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── redux
+│   │   ├── services
+│   │   ├── UserDashboard
+│   │   └── utils
+│   ├── package.json
+│   └── vite.config.js
+├── server
+│   ├── config
+│   ├── controllers
+│   ├── db
+│   ├── middlewares
+│   ├── models
+│   ├── routes
+│   ├── services
+│   ├── sockets
+│   └── utils
+└── README.md
 ```
 
 ---
@@ -131,110 +128,110 @@ server
 
 ### Authentication
 
-```
-POST /auth/register
-POST /auth/verify-otp
-POST /auth/login
-POST /auth/google-login
-POST /auth/resend-otp
-```
+- `POST /api/auth/register`
+- `POST /api/auth/verify-otp`
+- `POST /api/auth/resend-otp`
+- `POST /api/auth/login`
+- `POST /api/auth/google-login`
+- `GET /api/auth/me`
+- `GET /api/auth/logout`
 
-### Roadmaps
+### Roadmaps & Progress
 
-```
-POST /generate-roadmap
-GET  /roadmap/:id
-GET  /roadmaps
-```
+- `POST /api/ai/generate-roadmap`
+- `GET /api/ai/roadmap/:id`
+- `GET /api/ai/user/roadmaps`
+- `PATCH /api/ai/tasks/:taskId/toggle`
+- `PATCH /api/ai/weeks/:id/toggle-project`
+- `GET /api/ai/progress/roadmaps/:roadmapId`
+- `GET /api/ai/progress/roadmaps/:roadmapId/weeks/:weekNumber`
+- `GET /api/ai/streak`
+- `GET /api/ai/dashboard/state`
+- `GET /api/ai/user/progress`
+- `GET /api/ai/usage-status`
+- `GET /api/ai/agent/history/:roadmapId`
 
-### Tasks
+### Discovery
 
-```
-PATCH /tasks/:taskId/toggle
-```
+- `POST /api/ai/discovery/analyze`
+- `GET /api/ai/discovery/result`
 
-### Progress
+### Payments
 
-```
-GET /progress/roadmaps/:roadmapId
-GET /progress/roadmaps/:roadmapId/weeks/:weekNumber
-```
-
-### Streak
-
-```
-GET /streak
-```
+- `POST /api/payment/create-order`
+- `POST /api/payment/verify`
 
 ---
 
 ## ⚙️ Environment Variables
 
-Create a `.env` file in the root directory.
+Create a `.env` file in the `server/` folder or project root with the values below.
 
-```
+```env
 PORT=5000
-
-MONGO_URI=your_mongodb_connection
-
+MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-
+ACCESS_URL=http://localhost:5173
 GEMINI_API_KEY=your_gemini_api_key
-
-EMAIL_USER=your_email
+EMAIL_USER=your_email_address
 EMAIL_PASS=your_email_password
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 ```
 
 ---
 
-## 🚀 Installation & Setup
+## 🛠️ Run Locally
 
-Clone the repository
+### Backend
 
-```
-git clone https://github.com/yourusername/pathforge-ai-backend.git
-```
-
-Move into the project directory
-
-```
+```bash
 cd server
-```
-
-Install dependencies
-
-```
 npm install
+node index.js
 ```
 
-Run the server
+Or with nodemon:
 
-```
-nodemon index.js
+```bash
+cd server
+npx nodemon index.js
 ```
 
-Server will start on:
+### Frontend
 
+```bash
+cd client
+npm install
+npm run dev
 ```
-http://localhost:5000
-```
+
+Open `http://localhost:5173` in your browser.
 
 ---
 
-## 📈 Future Improvements
+## 💡 Notes
 
-* AI Adaptive Roadmaps
-* Smart Learning Analytics
-* AI Study Assistant
-* Payment Integration
-* Community Roadmap Sharing
-
----
-
-## 👨‍💻 Author
-
-Built with passion by a MERN Stack Developer focused on building intelligent web applications and scalable backend systems.
+- The app uses token-based authentication and stores the auth token in `localStorage`.
+- Roadmap generation is protected by plan-level access control and express rate limiting.
+- Task completion updates progress and streak data.
+- Discovery and roadmap AI outputs are stored for later retrieval.
+- Payment routes support Razorpay order creation and verification.
 
 ---
 
-⭐ If you like this project, consider giving it a star on GitHub!
+## 🙌 Contribution
+
+1. Fork the repository
+2. Create a feature branch
+3. Install dependencies in both `client` and `server`
+4. Run the app locally
+5. Submit a pull request with your changes
+
+---
+
+## 📜 License
+
+No license specified. Add one if you want to open source this project.

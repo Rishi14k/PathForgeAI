@@ -76,7 +76,6 @@ const streamGemmaResponse = async ({
           }
         }
       } else {
-        // ===== NON-STREAM MODE (🔥 your case) =====
         const json = await response.json();
 
         finalText = json.choices?.[0]?.message?.content || "";

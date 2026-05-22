@@ -1,20 +1,23 @@
-const axios = require('axios')
-
+const axios = require("axios");
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
-module.exports = async(email,otp)=>{
-    try {
-        const response = await axios.post(BREVO_API_URL,{
-            sender:{
-                name:"PathForge AI",
-                email:process.env.BREVO_SENDER_EMAIL
-            },
-            to:[{
-                email
-            }],
-            subject:"OTP verification code - PathForge AI",
-              htmlContent: `
+module.exports = async (email, otp) => {
+  try {
+    const response = await axios.post(
+      BREVO_API_URL,
+      {
+        sender: {
+          name: "SkillOrbit AI",
+          email: process.env.BREVO_SENDER_EMAIL,
+        },
+        to: [
+          {
+            email,
+          },
+        ],
+        subject: "OTP verification code - SkillOrbit AI",
+        htmlContent: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
             <div style="background-color: #007bff; padding: 20px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 24px;">PathForge AI</h1>
@@ -39,26 +42,25 @@ module.exports = async(email,otp)=>{
             </div>
 
             <div style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #888;">
-              © ${new Date().getFullYear()} PathForge AI Team. All rights reserved.
+              © ${new Date().getFullYear()} Skillorbit AI Team. All rights reserved.
             </div>
           </div>
         `,
-        },
-        {
-            headers:{
-                'api-key':process.env.BREVO_API,
-                "Content-Type": "application/json",
+      },
+      {
+        headers: {
+          "api-key": process.env.BREVO_API,
+          "Content-Type": "application/json",
           accept: "application/json",
-            }
-        }
-    )
+        },
+      },
+    );
     console.log("Brevo OTP email sent ✅", response.data);
-    } catch (error) {
-         console.error(
+  } catch (error) {
+    console.error(
       "Brevo OTP email error ❌",
       error.response?.data || error.message,
     );
     throw new Error("Failed to send OTP email");
-  
-    }
-}
+  }
+};
